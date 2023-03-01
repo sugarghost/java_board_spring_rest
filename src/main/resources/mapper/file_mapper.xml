@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.board.spring.rest.yoony.file.FileMapper">
+  <insert id="insertFile" parameterType="com.board.spring.rest.yoony.file.FileDTO">
+    INSERT INTO article_file
+    (article_id, file_origin_name, file_save_name, file_type, file_path)
+    VALUES (#{articleId}, #{fileOriginName}, #{fileSaveName}, #{fileType}, #{filePath})
+  </insert>
+  <select id="selectFileList" resultType="com.board.spring.rest.yoony.file.FileDTO" parameterType="long">
+    SELECT file_id, article_id, file_origin_name, file_type, created_date
+    FROM article_file
+    WHERE article_id = #{articleId}
+  </select>
+  <select id="selectFile" resultType="com.board.spring.rest.yoony.file.FileDTO" parameterType="com.board.spring.rest.yoony.file.FileDTO">
+    SELECT file_id, article_id, file_origin_name, file_save_name, file_type, file_path, created_date
+    FROM article_file
+    WHERE file_id = #{fileId}
+      AND article_id = #{articleId}
+  </select>
+  <select id="isArticleHasFile" resultType="boolean" parameterType="long">
+    SELECT EXISTS(SELECT 1
+                  FROM article_file
+                  WHERE article_id = #{articleId}
+                  LIMIT 1) as is_file_exist
+  </select>
+  <delete id="deleteFile" parameterType="com.board.spring.rest.yoony.file.FileDTO">
+    DELETE
+    FROM article_file
+    WHERE file_id = #{fileId}
+      AND article_id = #{articleId}
+  </delete>
+  <delete id="deleteAllFile" parameterType="long">
+    DELETE
+    FROM article_file
+    WHERE article_id = #{articleId}
+  </delete>
+</mapper>

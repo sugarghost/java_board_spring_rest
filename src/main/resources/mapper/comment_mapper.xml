@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.board.spring.rest.yoony.comment.CommentMapper">
+  <insert id="insertComment" parameterType="com.board.spring.rest.yoony.comment.CommentDTO">
+    INSERT INTO comment
+    (article_id, content)
+    VALUES
+    (#{articleId}, #{content})
+  </insert>
+  <select id="selectCommentList" resultType="com.board.spring.rest.yoony.comment.CommentDTO" parameterType="long">
+    SELECT comment_id, article_id, content, created_date
+    FROM comment
+    WHERE article_id = #{articleId}
+  </select>
+</mapper>
