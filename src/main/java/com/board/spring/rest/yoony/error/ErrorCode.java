@@ -60,6 +60,11 @@ public enum ErrorCode {
 
   // FILE
   /**
+   * File ID가 유효하지 않음
+   */
+  File_ID_NOT_VALID(400, "FILE.ERR.400.DTO.ID", "FILE ID NOT VALID"),
+
+  /**
    * 파일을 찾을 수 없음
    */
   FILE_NOT_FOUND(404, "FILE.ERR.404", "FILE NOT FOUND"),
@@ -67,6 +72,10 @@ public enum ErrorCode {
    * 파일 추가 실패
    */
   FILE_INSERT_FAIL(500, "FILE.ERR.500.ACTION.INSERT", "FILE INSERT FAIL"),
+  /**
+   * 파일 삭제 실패
+   */
+  FILE_DELETE_FAIL(500, "FILE.ERR.500.ACTION.DELETE", "FILE DELETE FAIL"),
 
   // COMMENT
   /**

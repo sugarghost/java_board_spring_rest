@@ -3,10 +3,19 @@ package com.board.spring.rest.yoony.article;
 import com.board.spring.rest.yoony.article.search.SearchDTO;
 import com.board.spring.rest.yoony.error.CustomException;
 import com.board.spring.rest.yoony.error.ErrorCode;
+import com.board.spring.rest.yoony.file.FileDTO;
+import com.board.spring.rest.yoony.file.FileMapper;
+import com.board.spring.rest.yoony.file.FileProperty;
+import com.board.spring.rest.yoony.util.FileUtil;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 설명
@@ -22,11 +31,43 @@ public class ArticleService {
   @Autowired
   private ArticleMapper articleMapper;
 
+  @Autowired
+  private FileMapper fileMapper;
+  @Autowired
+  private FileProperty fileProperty;
+
   public int insertArticle(ArticleDTO articleDTO) {
     int result = articleMapper.insertArticle(articleDTO);
     if (result < 1) {
       throw new CustomException(ErrorCode.ARTICLE_INSERT_FAIL);
     }
+    return result;
+  }
+
+  @Transactional
+  public int insertArticleAndFiles(ArticleDTO articleDTO, MultipartFile[] files)
+      throws Exception {
+    int result = articleMapper.insertArticle(articleDTO);
+    if (result < 1) {
+      throw new CustomException(ErrorCode.ARTICLE_INSERT_FAIL);
+    }
+
+    if (files != null) {
+      for (MultipartFile file : files) {
+        if (file.isEmpty()) {
+          continue;
+        }
+
+        FileDTO fileDTO = FileUtil.uploadFile(file, fileProperty.getUploadPath());
+        fileDTO.setFileId(articleDTO.getArticleId());
+
+        int fileInsertResult = fileMapper.insertFile(fileDTO);
+        if (fileInsertResult < 1) {
+          throw new CustomException(ErrorCode.FILE_INSERT_FAIL);
+        }
+      }
+    }
+
     return result;
   }
 
@@ -58,6 +99,45 @@ public class ArticleService {
       throw new CustomException(ErrorCode.ARTICLE_PASSWORD_NOT_VALID);
     }
     return true;
+  }
+  @Transactional
+  public int updateArticleAndFiles(ArticleDTO articleDTO, String[]  deleteFiles, MultipartFile[] files)
+      throws Exception {
+    int result = articleMapper.updateArticle(articleDTO);
+    if (result < 1) {
+      throw new CustomException(ErrorCode.ARTICLE_UPDATE_FAIL);
+    }
+    if (deleteFiles != null) {
+      for (String deleteFileId : deleteFiles) {
+        FileDTO deleteFileDTO = new FileDTO();
+        deleteFileDTO.setFileId(Integer.parseInt(deleteFileId));
+        deleteFileDTO.setArticleId(articleDTO.getArticleId());
+
+        int fileDeleteResult = fileMapper.deleteFile(deleteFileDTO);
+        if (fileDeleteResult < 1) {
+          throw new CustomException(ErrorCode.FILE_DELETE_FAIL);
+        }
+      }
+    }
+
+
+    if (files != null) {
+      for (MultipartFile file : files) {
+        if (file.isEmpty()) {
+          continue;
+        }
+
+        FileDTO fileDTO = FileUtil.uploadFile(file, fileProperty.getUploadPath());
+        fileDTO.setFileId(articleDTO.getArticleId());
+
+        int fileInsertResult = fileMapper.insertFile(fileDTO);
+        if (fileInsertResult < 1) {
+          throw new CustomException(ErrorCode.FILE_INSERT_FAIL);
+        }
+      }
+    }
+
+    return result;
   }
 
   public int updateArticle(ArticleDTO articleDTO) {

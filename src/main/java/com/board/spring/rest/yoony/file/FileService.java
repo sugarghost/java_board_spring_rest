@@ -1,7 +1,12 @@
 package com.board.spring.rest.yoony.file;
 
+import com.board.spring.rest.yoony.error.CustomException;
+import com.board.spring.rest.yoony.error.ErrorCode;
+import com.board.spring.rest.yoony.util.FileUtil;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 /**
@@ -30,6 +35,9 @@ public class FileService {
 
   public FileDTO selectFile(FileDTO fileDTO) {
     FileDTO file = fileMapper.selectFile(fileDTO);
+    if (file == null) {
+      throw new CustomException(ErrorCode.FILE_NOT_FOUND);
+    }
     return fileDTO;
   }
 
@@ -46,6 +54,11 @@ public class FileService {
   public int deleteAllFile(long articleId) {
     int result = fileMapper.deleteAllFile(articleId);
     return result;
+  }
+
+
+  public ResponseEntity downloadFile(FileDTO fileDTO,List<String> rangeHeader) throws Exception {
+    return FileUtil.downloadFile(fileDTO.getFileSaveName(),fileDTO.getFilePath(), rangeHeader);
   }
 
 }
