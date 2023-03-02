@@ -14,10 +14,12 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -56,25 +58,18 @@ public class ArticleController {
   }
 
   @GetMapping
-  public ResponseEntity getArticleList(@RequestBody ObjectNode requestNode,
-      @RequestParam(defaultValue = "5") int limit, @RequestParam(defaultValue = "0") int offset)
+  public ResponseEntity getArticleList(@ModelAttribute SearchDTO searchDTO)
       throws CustomException, Exception {
-    ObjectMapper mapper = new ObjectMapper();   // JSON을 Object화 하기 위한 Jackson ObjectMapper 이용
-    SearchDTO searchDTO = mapper.treeToValue(requestNode.get("search"), SearchDTO.class);
-    searchDTO.setOffset(offset);
-    searchDTO.setLimit(limit);
-
     int totalCount = articleService.selectArticleCount(searchDTO);
-
-    PageDTO pageDTO = mapper.treeToValue(requestNode.get("page"), PageDTO.class);
-    pageDTO.setTotalCount(totalCount);
-    pageDTO.calculatePage();
 
     List<ArticleDTO> articleList = articleService.selectArticleList(searchDTO);
     if (articleList == null) {
       return status(HttpStatus.NO_CONTENT).body(null);
     }
-    return ResponseEntity.ok(articleList);
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("X-Total-Count", String.valueOf(totalCount));
+    return new ResponseEntity(articleList, headers, HttpStatus.OK);
   }
 
   @GetMapping("/{articleId}")

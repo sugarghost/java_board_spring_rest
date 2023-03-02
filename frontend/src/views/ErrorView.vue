@@ -1,7 +1,4 @@
 <template lang="ko">
-    <div>
-        
-    </div>
 </template>
 <script>
 export default {

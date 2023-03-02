@@ -25,7 +25,7 @@ public class SearchDTO {
   /**
    * 카테고리 아이디
    */
-  private String categoryId;
+  private long categoryId;
   /**
    * 검색 시작 날짜
    */
@@ -36,13 +36,12 @@ public class SearchDTO {
   private String endDate;
 
   /**
-   * 시작 Row 번호
+   * 페이지당 보여줄 article 수
    */
-  private int offset;
+  private int articlePerPage;
 
   /**
-   * 가져올 Row 개수
+   * page number
    */
-  private int limit;
-
+  private int pageNum;
 }
