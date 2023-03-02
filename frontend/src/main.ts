@@ -5,11 +5,7 @@ import router from "./router";
 import store from "./store";
 
 const app = createApp(App);
-
-app.config.globalProperties.$store = store;
-
-app.config.globalProperties.$axios = axios;
-
+app.provide("axios", axios);
 app.use(router);
 app.use(store);
 
