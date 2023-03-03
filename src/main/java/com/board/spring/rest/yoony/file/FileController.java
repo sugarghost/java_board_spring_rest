@@ -4,6 +4,7 @@ import com.board.spring.rest.yoony.article.ArticleService;
 import com.board.spring.rest.yoony.error.CustomException;
 import com.board.spring.rest.yoony.error.CustomExceptionView;
 import com.board.spring.rest.yoony.error.ErrorCode;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +49,16 @@ public class FileController {
   @GetMapping
   public ResponseEntity getFileList(@PathVariable long articleId)
       throws CustomException, Exception {
-    return ResponseEntity.ok("Hello World");
+
+    if (articleId == 0) {
+      throw new CustomExceptionView(ErrorCode.ARTICLE_ID_NOT_VALID);
+    }
+    if (articleService.isArticleExist(articleId) == false) {
+      throw new CustomExceptionView(ErrorCode.ARTICLE_NOT_FOUND);
+    }
+
+    List<FileDTO> fileList = fileService.selectFileList(articleId);
+    return ResponseEntity.ok(fileList);
   }
 
   @GetMapping("/{fileId}")

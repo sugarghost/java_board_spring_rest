@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import ArticleListView from "../views/ArticleListView.vue";
-import ArticleListWrite from "../views/ArticleListWrite.vue";
+import ArticleWriteView from "../views/ArticleWriteView.vue";
+import ArticleDetailView from "../views/ArticleDetailView.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -17,7 +18,12 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/write",
     name: "write",
-    component: ArticleListWrite,
+    component: ArticleWriteView,
+  },
+  {
+    path: "/view/:articleId",
+    name: "view",
+    component: ArticleDetailView,
   },
 ];
 

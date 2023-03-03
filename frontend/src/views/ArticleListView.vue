@@ -39,7 +39,13 @@
           <template #item="{ item }">
             <tr>
               <td>{{ item.raw.categoryName }}</td>
-              <td>{{ item.raw.title }}</td>
+              <td>
+                <!-- TODO: 링크에 color가 안들어감, 방법 찾아야함 -->
+                <span @click="$router.push('/view/' + item.raw.articleId)"
+                  @keydown="$router.push('/view/' + item.raw.articleId)">
+                  {{ item.raw.title }}
+                </span>
+              </td>
               <td>{{ item.raw.writer }}</td>
               <td>{{ item.raw.viewCount }}</td>
               <td>{{ formatDate(item.raw.createdDate) }}</td>
@@ -61,6 +67,7 @@
 import { ref, computed, onBeforeMount, inject } from "vue";
 import { useStore } from "vuex";
 import { useRouter, useRoute } from "vue-router"
+import { formatDate } from "../assets/common";
 
 export default {
   name: "ArticleList",
@@ -98,12 +105,12 @@ export default {
     }
 
     const headers = [
-      { title: "Category", value: "categoryName" },
-      { title: "Title", value: "title" },
-      { title: "Writer", value: "writer" },
-      { title: "Views", value: "viewCount" },
-      { title: "Created", value: "createdDate", align: "center" },
-      { title: "Modified", value: "modifiedDate", align: "center" },
+      { title: "카테고리", value: "categoryName" },
+      { title: "제목", value: "title", class: "purple-darken-2" },
+      { title: "작성자", value: "writer" },
+      { title: "조회수", value: "viewCount" },
+      { title: "생성일", value: "createdDate", align: "center" },
+      { title: "수정일", value: "modifiedDate", align: "center" },
     ];
 
 
@@ -141,12 +148,13 @@ export default {
       });
       articles.value = response.data.map((articleData) => ({
         articleId: articleData.articleId,
-        title: articleData.title,
+        title: articleData.title + (articleData.isFileExist ? " 📎" : ""),
         writer: articleData.writer,
         viewCount: articleData.viewCount,
         categoryName: articleData.categoryName,
         createdDate: articleData.createdDate,
         modifiedDate: articleData.modifiedDate,
+        isFileExist: articleData.isFileExist,
       }));
       totalItems.value = Number(response.headers["x-total-count"]);
       store.commit("updateSearchParams", searchParams.value);
@@ -162,24 +170,6 @@ export default {
       getArticleList();
     }
 
-    // articleList에서 날짜 표시할때 사용
-
-    const formatDate = (date) => {
-      if (!date) {
-        return "-";
-      }
-      const formatedDate = new Date(date);
-
-      const options = {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false,
-      };
-      return formatedDate.toLocaleDateString("ko-KR", options);
-    };
 
     // search 관련
     const searchArticles = () => {
