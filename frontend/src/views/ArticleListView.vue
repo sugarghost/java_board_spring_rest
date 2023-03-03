@@ -67,7 +67,7 @@
 import { ref, computed, onBeforeMount, inject } from "vue";
 import { useStore } from "vuex";
 import { useRouter, useRoute } from "vue-router"
-import { formatDate } from "../assets/common";
+import { formatDate, subStringWithSkipMark } from "../assets/common";
 
 export default {
   name: "ArticleList",
@@ -148,7 +148,7 @@ export default {
       });
       articles.value = response.data.map((articleData) => ({
         articleId: articleData.articleId,
-        title: articleData.title + (articleData.isFileExist ? " 📎" : ""),
+        title: subStringWithSkipMark(articleData.title, 80) + (articleData.isFileExist ? " 📎" : ""),
         writer: articleData.writer,
         viewCount: articleData.viewCount,
         categoryName: articleData.categoryName,

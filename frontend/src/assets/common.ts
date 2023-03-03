@@ -31,4 +31,12 @@ const formatDateSecond = (date: string) => {
   };
   return formatedDate.toLocaleDateString("ko-KR", options);
 };
-export { formatDate, formatDateSecond };
+
+const subStringWithSkipMark = (str: string, length: number) => {
+  const skipMark = "…";
+  if (str.length > length) {
+    return str.substring(0, length) + skipMark;
+  }
+  return str;
+};
+export { formatDate, formatDateSecond, subStringWithSkipMark };
