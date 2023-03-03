@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +29,8 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @Service
 public class ArticleService {
+
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   @Autowired
   private ArticleMapper articleMapper;
@@ -47,6 +51,7 @@ public class ArticleService {
   @Transactional
   public int insertArticleAndFiles(ArticleDTO articleDTO, MultipartFile[] files)
       throws Exception {
+
     int result = articleMapper.insertArticle(articleDTO);
     if (result < 1) {
       throw new CustomException(ErrorCode.ARTICLE_INSERT_FAIL);
@@ -59,7 +64,7 @@ public class ArticleService {
         }
 
         FileDTO fileDTO = FileUtil.uploadFile(file, fileProperty.getUploadPath());
-        fileDTO.setFileId(articleDTO.getArticleId());
+        fileDTO.setArticleId(articleDTO.getArticleId());
 
         int fileInsertResult = fileMapper.insertFile(fileDTO);
         if (fileInsertResult < 1) {

@@ -167,6 +167,7 @@ export default {
         // file download
         const fileDownload = async (fileId) => {
             try {
+                // TODO: spring Server에 Range 구현은 했지만 사용은 보류(테스트도 안해봄)
                 const response = await axios.get(`/v1/articles/${articleId}/files/${fileId}`, {
                     responseType: "blob",
                     headers: {

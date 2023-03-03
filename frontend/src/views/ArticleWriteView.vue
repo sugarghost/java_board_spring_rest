@@ -137,8 +137,10 @@ export default {
           title: title.value,
           content: content.value,
         }));
+        console.log(files.value)
         for (let i = 0; i < files.value.length; i += 1) {
-          formData.append("files", files[i]);
+          console.log(files.value[i])
+          formData.append("files", files.value[i]);
         }
         axios.post("/v1/articles", formData, {
           headers: {

@@ -36,8 +36,8 @@ public class FileUtil {
     return null;
   }
 
-  public static ResponseEntity downloadFile(String fileName, String uploadPath, List<String> rangeHeader) throws Exception {
-    Path filePath = Paths.get(uploadPath).resolve(fileName).normalize();
+  public static ResponseEntity downloadFile(FileDTO fileDTO, List<String> rangeHeader) throws Exception {
+    Path filePath = Paths.get(fileDTO.getFilePath()).resolve(fileDTO.getFileSaveName()).normalize();
     Resource resource = new FileSystemResource(filePath.toFile());
     if (resource.exists() || resource.isReadable()) {
       long contentLength = resource.contentLength();
@@ -59,7 +59,7 @@ public class FileUtil {
         }
       }
       return ResponseEntity.ok()
-          .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
+          .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileDTO.getFileOriginName() + "")
           .header(HttpHeaders.CONTENT_LENGTH, String.valueOf(contentLength))
           .header(HttpHeaders.ACCEPT_RANGES, "bytes")
           .body(resource);

@@ -38,7 +38,7 @@ public class FileService {
     if (file == null) {
       throw new CustomException(ErrorCode.FILE_NOT_FOUND);
     }
-    return fileDTO;
+    return file;
   }
 
   public boolean isArticleHasFile(long articleId) {
@@ -58,7 +58,7 @@ public class FileService {
 
 
   public ResponseEntity downloadFile(FileDTO fileDTO,List<String> rangeHeader) throws Exception {
-    return FileUtil.downloadFile(fileDTO.getFileSaveName(),fileDTO.getFilePath(), rangeHeader);
+    return FileUtil.downloadFile(fileDTO, rangeHeader);
   }
 
 }
