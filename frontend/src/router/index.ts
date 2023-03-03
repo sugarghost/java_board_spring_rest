@@ -5,11 +5,17 @@ import ArticleListWrite from "../views/ArticleListWrite.vue";
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
+    redirect(to) {
+      return "/list";
+    },
+  },
+  {
+    path: "/list",
     name: "list",
     component: ArticleListView,
   },
   {
-    path: "/write",
+    path: "/write/:articleId",
     name: "write",
     component: ArticleListWrite,
   },
