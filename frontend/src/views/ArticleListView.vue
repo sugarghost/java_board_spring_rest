@@ -1,61 +1,59 @@
 <template>
   <v-container fluid>
-    <h1>자유게시판 - 목록</h1>
-    <v-form>
-      <v-row class="border align-content-center p-2">
-        <v-col cols="1" class="align-self-center">등록일</v-col>
-        <v-col cols="2">
-          <v-text-field type="date" v-model="searchParams.startDate" outlined color="primary" />
-        </v-col>
-        <v-col cols="1" class="align-self-center text-center">~</v-col>
-        <v-col cols="2">
-          <v-text-field type="date" v-model="searchParams.endDate" outlined color="primary" />
-        </v-col>
-        <v-col cols="2">
-          <v-select v-model="searchParams.categoryId" :items="categories" item-title="name" item-value="categoryId"
-            single-line label="Select a category"></v-select>
-        </v-col>
-        <v-col cols="2">
-          <v-text-field v-model="searchParams.searchWord" placeholder="제목, 내용, 작성자 검색" outlined color="primary" />
-        </v-col>
-        <v-col cols="2">
-          <input type="hidden" name="pageNum" value="1" />
-          <v-btn color="primary" @click="searchArticles">검색</v-btn>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col>총 {{ totalItems }}건</v-col>
-      </v-row>
-      <v-row>
-        <v-col>
+    <h1 class="mb-4">자유게시판 - 목록</h1>
+    <v-row class="align-content-center p-2">
+      <v-col cols="1" class="align-self-center">등록일</v-col>
+      <v-col cols="2">
+        <v-text-field type="date" v-model="searchParams.startDate" outlined color="primary" />
+      </v-col>
+      <v-col cols="1" class="align-self-center text-center">~</v-col>
+      <v-col cols="2">
+        <v-text-field type="date" v-model="searchParams.endDate" outlined color="primary" />
+      </v-col>
+      <v-col cols="2">
+        <v-select v-model="searchParams.categoryId" :items="categories" item-title="name" item-value="categoryId"
+          single-line label="카테고리"></v-select>
+      </v-col>
+      <v-col cols="2">
+        <v-text-field v-model="searchParams.searchWord" placeholder="제목, 내용, 작성자 검색" outlined color="primary" />
+      </v-col>
+      <v-col cols="2">
+        <input type="hidden" name="pageNum" value="1" />
+        <v-btn color="primary" @click="searchArticles">검색</v-btn>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col>총 {{ totalItems }}건</v-col>
+    </v-row>
+    <v-row>
+      <v-col>
 
-          <v-data-table-server :headers="headers" :items="articles" item-value="name" class="elevation-1"
-            :items-per-page="searchParams.articlePerPage" :items-length="totalItems" :loading="loading"
-            @update:options="updateList">
+        <v-data-table-server :headers="headers" :items="articles" item-value="name" class="elevation-1"
+          :items-per-page="searchParams.articlePerPage" :items-length="totalItems" :loading="loading"
+          :page="searchParams.pageNum" @update:options="updateList">
 
-            <template v-slot:[`column.name`]="{ column }">
-              {{ column.title.toUpperCase() }}
-            </template>
+          <template v-slot:[`column.name`]="{ column }">
+            {{ column.title.toUpperCase() }}
+          </template>
 
-            <template #item="{ item }">
-              <tr>
-                <td>{{ item.raw.categoryName }}</td>
-                <td>{{ item.raw.title }}</td>
-                <td>{{ item.raw.writer }}</td>
-                <td>{{ item.raw.viewCount }}</td>
-                <td>{{ formatDate(item.raw.createdDate) }}</td>
-                <td>{{ formatDate(item.raw.modifiedDate) }}</td>
-              </tr>
-            </template>
-          </v-data-table-server>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col class="d-flex justify-end">
-          <v-btn color="primary" @click="$router.push('/write')">글쓰기</v-btn>
-        </v-col>
-      </v-row>
-    </v-form>
+          <template #item="{ item }">
+            <tr>
+              <td>{{ item.raw.categoryName }}</td>
+              <td>{{ item.raw.title }}</td>
+              <td>{{ item.raw.writer }}</td>
+              <td>{{ item.raw.viewCount }}</td>
+              <td>{{ formatDate(item.raw.createdDate) }}</td>
+              <td>{{ formatDate(item.raw.modifiedDate) }}</td>
+            </tr>
+          </template>
+        </v-data-table-server>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col class="d-flex justify-end">
+        <v-btn color="primary" @click="$router.push('/write')">글쓰기</v-btn>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -73,7 +71,8 @@ export default {
     const store = useStore();
     const route = useRoute()
 
-    // if route have query param, update searchParams and store
+    // route에 넘어온 파라미터 있으면 store에 저장
+    // TODO: 보기 않좋고, 현재 검색 시스템이 위에 URL에 파라미터 적용되는 시스템이 아님, 연동 되도록 바꿔야함
     if (route.query) {
       const searchParamsQuery = store.getters.searchParams;
 
@@ -118,12 +117,14 @@ export default {
           categoryId: categoryData.categoryId,
           name: categoryData.name,
         }))
-
-        console.log(categories.value);
       } catch (error) {
         console.error(error);
       }
     };
+    onBeforeMount(() => {
+      getCategories();
+    });
+
 
     // articleList 관련요소
     const articles = ref([]);
@@ -151,6 +152,9 @@ export default {
       store.commit("updateSearchParams", searchParams.value);
       loading.value = false;
     }
+    onBeforeMount(() => {
+      getArticleList();
+    });
 
     const updateList = ({ page, itemsPerPage, sortBy }) => {
       searchParams.value.pageNum = page;
@@ -183,10 +187,6 @@ export default {
       getArticleList();
     };
 
-    onBeforeMount(() => {
-      getCategories();
-      getArticleList();
-    });
     return {
       headers,
       articles,

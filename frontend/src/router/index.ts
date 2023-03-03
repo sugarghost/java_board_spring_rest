@@ -15,7 +15,7 @@ const routes: Array<RouteRecordRaw> = [
     component: ArticleListView,
   },
   {
-    path: "/write/:articleId",
+    path: "/write",
     name: "write",
     component: ArticleListWrite,
   },
