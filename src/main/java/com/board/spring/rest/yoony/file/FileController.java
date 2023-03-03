@@ -21,12 +21,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 설명
+ * 파일 도메인을 처리하는 컨트롤러
+ * <p> /v1/articles/{articleId}/files 요청을 처리함
  *
  * @author YK
  * @version 1.0
  * @fileName CommentController
- * @since 2023-02-28
+ * @since 2023-03-04
  */
 @RestController
 @RequestMapping("/v1/articles/{articleId}/files")
@@ -40,12 +41,19 @@ public class FileController {
   @Autowired
   ArticleService articleService;
 
-  @PostMapping
-  public ResponseEntity createFile(@PathVariable long articleId)
-      throws CustomException, Exception {
-    return ResponseEntity.ok("Hello World");
-  }
-
+  /**
+   * 특정 게시물의 파일을 리스트를 조회하는 RequestMapping
+   * <p> /v1/articles/{articleId}/files GET 요청을 처리함
+   * @param articleId
+   * @return ResponseEntity 성공시 HttpStatus.OK와 파일 리스트 반환
+   * @throws CustomException
+   * @throws Exception
+   * @see FileService#selectFileList(long)
+   * @see ArticleService#isArticleExist(long)
+   * @author YK
+   * @version 1.0
+   * @since 2023-03-04
+   */
   @GetMapping
   public ResponseEntity getFileList(@PathVariable long articleId)
       throws CustomException, Exception {
@@ -61,6 +69,24 @@ public class FileController {
     return ResponseEntity.ok(fileList);
   }
 
+  /**
+   * 특정 게시물의 특정 파일을 다운로드 하기 위한 RequestMapping
+   * <p> /v1/articles/{articleId}/files/{fileId} GET 요청을 처리함
+   * <p> 파일 다운로드시 Range 처리를 위해 요청 헤더를 받아서 처리함(사용은 안함)
+   *
+   * @param fileId 파일 아이디
+   * @param articleId 게시물 아이디
+   * @param headers 다운로드 처리를 위한 요청 헤더
+   * @return
+   * @throws CustomException
+   * @throws Exception
+   * @see FileService#downloadFile(FileDTO, List)
+   * @see ArticleService#isArticleExist(long)
+   * @see FileService#selectFile(FileDTO)
+   * @author YK
+   * @version 1.0
+   * @since 2023-03-04
+   */
   @GetMapping("/{fileId}")
   public ResponseEntity getFile(@PathVariable long fileId, @PathVariable long articleId,
       @RequestHeader HttpHeaders headers)
@@ -82,21 +108,4 @@ public class FileController {
     return fileService.downloadFile(targetFileDTO, headers.get(HttpHeaders.RANGE));
   }
 
-  @PutMapping("/{fileId}")
-  public ResponseEntity updateFile(@PathVariable String fileId, @PathVariable long articleId)
-      throws CustomException, Exception {
-    return ResponseEntity.ok("Hello World");
-  }
-
-  @DeleteMapping
-  public ResponseEntity deleteFileList(@PathVariable long articleId)
-      throws CustomException, Exception {
-    return ResponseEntity.ok("Hello World");
-  }
-
-  @DeleteMapping("/{fileId}")
-  public ResponseEntity deleteFile(@PathVariable String fileId, @PathVariable long articleId)
-      throws CustomException, Exception {
-    return ResponseEntity.ok("Hello World");
-  }
 }

@@ -20,12 +20,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 설명
+ * comment 도메인을 처리하는 컨트롤러
+ * <p> /v1/articles/{articleId}/comments 요청을 처리함
  *
  * @author YK
  * @version 1.0
  * @fileName CommentController
- * @since 2023-02-28
+ * @since 2023-03-04
  */
 @RestController
 @RequestMapping("/v1/articles/{articleId}/comments")
@@ -35,6 +36,19 @@ public class CommentController {
   ArticleService articleService;
   @Autowired
   CommentService commentService;
+  /**
+   * 댓글을 생성하는 RequestMapping
+   * <p> /v1/articles/{articleId}/comments POST 요청을 처리함
+   * @param articleId 댓글을 생성할 게시글의 id
+   * @param commentDTO 댓글 정보를 담은 DTO
+   * @return ResponseEntity 형태의 응답(성공시 HttpStatus.CREATED) 반환
+   * @throws CustomException (유효성 검사 실패시 발생)
+   * @throws Exception
+   * @see CommentService#insertComment(CommentDTO)
+   * @author YK
+   * @version 1.0
+   * @since 2023-03-04
+   */
   @PostMapping
   public ResponseEntity createComment(@PathVariable long articleId, @RequestBody CommentDTO commentDTO)
       throws CustomException, Exception {
@@ -54,6 +68,18 @@ public class CommentController {
     return new ResponseEntity(HttpStatus.CREATED);
   }
 
+  /**
+   * 댓글 목록을 가져오는 RequestMapping
+   * <p> /v1/articles/{articleId}/comments GET 요청을 처리함
+   * @param articleId 댓글을 가져올 게시글의 id
+   * @return ResponseEntity 형태의 응답(성공시 HttpStatus.OK) 반환
+   * @throws CustomException (유효성 검사 실패시 발생)
+   * @throws Exception
+   * @see CommentService#selectCommentList(long)
+   * @author YK
+   * @version 1.0
+   * @since 2023-03-04
+   */
   @GetMapping
   public ResponseEntity getCommentList(@PathVariable long articleId)
       throws CustomException, Exception {

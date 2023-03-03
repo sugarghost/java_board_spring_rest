@@ -16,6 +16,7 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface ArticleMapper {
+
   /**
    * 게시글을 등록하는 메소드
    * <p>useGeneratedKeys="true"를 통해 insert 된 articleId가 매개변수 articleDTO에 자동으로 입력됨
@@ -34,26 +35,28 @@ public interface ArticleMapper {
   /**
    * 게시글 개수를 조회하는 메소드
    *
-   * @param params Map<String, Object> 형태로 담긴 검색 조건
-   *               <p>key: searchWord, value: 검색 키워드로 title, content, writer 세가지 컬럼에 like 연산처리
-   *               <p>key: categoryId, value: 카테고리 ID
-   *               <p>key: startDate, value: 날자 검색 시작일로 endDate와 함께 쓰이며 작성일 기간 검색에 사용
-   *               <p>key: endDate, value: 날자 검색 종료일로 startDate와 함께 쓰이며 작성일 기간 검색에 사용
+   * @param searchDTO 검색 조건을 담은 DTO
+   *                  <p>searchWord: 검색 키워드로 title, content, writer 세가지 컬럼에 like 연산처리
+   *                  <p>categoryId: 카테고리 ID
+   *                  <p>startDate: 날자 검색 시작일로 endDate와 함께 쓰이며 작성일 기간 검색에 사용
+   *                  <p>endDate: 날자 검색 종료일로 startDate와 함께 쓰이며 작성일 기간 검색에 사용
    * @return int 조회된 게시글 개수
    * @author yoony
    * @version 1.0
-   * @since 2023. 02. 26.
+   * @since 2023. 03. 04.
    */
   int selectArticleCount(SearchDTO searchDTO);
 
   /**
    * 게시글 목록을 조회하는 메소드
    *
-   * @param params Map<String, Object> 형태로 담긴 검색 조건
-   *               <p>key: searchWord, value: 검색 키워드로 title, content, writer 세가지 컬럼에 like 연산처리
-   *               <p>key: categoryId, value: 카테고리 ID
-   *               <p>key: startDate, value: 날자 검색 시작일로 endDate와 함께 쓰이며 작성일 기간 검색에 사용
-   *               <p>key: endDate, value: 날자 검색 종료일로 startDate와 함께 쓰이며 작성일 기간 검색에 사용
+   * @param searchDTO 검색 조건을 담은 DTO
+   *                  <p>searchWord: 검색 키워드로 title, content, writer 세가지 컬럼에 like 연산처리
+   *                  <p>categoryId: 카테고리 ID
+   *                  <p>startDate: 날자 검색 시작일로 endDate와 함께 쓰이며 작성일 기간 검색에 사용
+   *                  <p>endDate: 날자 검색 종료일로 startDate와 함께 쓰이며 작성일 기간 검색에 사용
+   *                  <p>articlePerPage: 페이지당 보여줄 게시글 수
+   *                  <p>pageNum: 페이지 번호
    * @return List ArticleDTO 리스트
    * @author yoony
    * @version 1.0
@@ -68,7 +71,7 @@ public interface ArticleMapper {
    * @return {@link ArticleDTO} 조회된 게시글 정보를 담은 DTO
    * @aothor yoony
    * @version 1.0
-   * @since 2023. 02. 26.
+   * @since 2023. 03. 04.
    */
   ArticleDTO selectArticle(long articleId);
 
@@ -79,7 +82,7 @@ public interface ArticleMapper {
    * @return boolean 게시글이 존재하면 true, 존재하지 않으면 false
    * @aothor yoony
    * @version 1.0
-   * @since 2023. 02. 26.
+   * @since 2023. 03. 04.
    */
   boolean isArticleExist(long articleId);
 
@@ -122,7 +125,7 @@ public interface ArticleMapper {
 
   /**
    * 게시글을 삭제하는 메소드
-   * <p>사용 전 {@link ArticleMapper#selectPasswordCheck(ArticleDTO)}를 통해 비밀번호가 일치하는지 확인을 권장
+   * <p>사용 전 {@link ArticleMapper#isPasswordCorrect(ArticleDTO)}를 통해 비밀번호가 일치하는지 확인을 권장
    * <p>쿼리에서도 비밀번호를 체크하지만, 보안을 위해 2차 검증
    *
    * @param articleDTO 삭제 대상 articleId, password
@@ -131,7 +134,7 @@ public interface ArticleMapper {
    * @return int 삭제된 행의 개수
    * @aothor yoony
    * @version 1.0
-   * @since 2023. 02. 26.
+   * @since 2023. 03. 04.
    */
   int deleteArticle(ArticleDTO articleDTO);
 }

@@ -12,7 +12,7 @@ import org.apache.ibatis.type.Alias;
  *
  * @author yoony
  * @version 1.0
- * @since 2023. 02. 26.
+ * @since 2023. 03. 04.
  */
 @Data
 @Alias("SearchDTO")
