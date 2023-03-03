@@ -3,10 +3,14 @@ import axios from "axios";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
+import vuetify from "./plugins/vuetify";
+// import { loadFonts } from './plugins/webfontloader';
 
-const app = createApp(App);
-app.provide("axios", axios);
-app.use(router);
-app.use(store);
+// loadFonts();
 
-app.mount("#app");
+createApp(App)
+.provide("axios", axios)
+  .use(router)
+  .use(store)
+  .use(vuetify)
+  .mount("#app");
