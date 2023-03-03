@@ -99,10 +99,14 @@ public class ArticleController {
 
   @PutMapping("/{articleId}")
   public ResponseEntity updateArticle(@PathVariable long articleId,
-      @ModelAttribute ArticleDTO articleDTO,
-      @RequestParam("deleteFiles") String[] deleteFiles,
-      @RequestParam("files") MultipartFile[] files)
+      @RequestPart("articleDTO") String articleDTOJson,
+      @RequestParam(value = "deleteFiles",required = false) String[] deleteFiles,
+      @RequestPart(value = "files",required = false) MultipartFile[] files)
       throws CustomException, Exception {
+
+    ObjectMapper objectMapper = new ObjectMapper();
+    ArticleDTO articleDTO = objectMapper.readValue(articleDTOJson, ArticleDTO.class);
+
     if (articleId == 0) {
       throw new CustomExceptionView(ErrorCode.ARTICLE_ID_NOT_VALID);
     }
@@ -121,7 +125,7 @@ public class ArticleController {
 
     int result = articleService.updateArticleAndFiles(articleDTO, deleteFiles, files);
 
-    return ResponseEntity.ok("Hello World");
+    return new ResponseEntity(HttpStatus.NO_CONTENT);
   }
 
   @DeleteMapping("/{articleId}")
@@ -135,10 +139,11 @@ public class ArticleController {
       throw new CustomExceptionView(ErrorCode.ARTICLE_NOT_FOUND);
     }
     articleDTO.setArticleId(articleId);
-    if (articleDTO.isUpdateArticleValid() == false) {
-      throw new CustomExceptionView(ErrorCode.ARTICLE_UPDATE_NOT_VALID);
-    }
     articleDTO.setPassword(Security.sha256Encrypt(articleDTO.getPassword()));
+
+    if (articleService.isPasswordCorrect(articleDTO) == false) {
+      throw new CustomExceptionView(ErrorCode.ARTICLE_PASSWORD_NOT_VALID);
+    }
 
     int deleteResult = articleService.deleteArticle(articleDTO);
     return new ResponseEntity(HttpStatus.NO_CONTENT);

@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <v-container fluid>
     <h1>자유게시판 - 등록</h1>
     <v-form v-model="formValid" @submit.prevent="submitForm">
 
@@ -55,7 +55,7 @@
       </div>
 
     </v-form>
-  </div>
+  </v-container>
 </template>
   
 <script>
@@ -95,6 +95,7 @@ export default {
 
     // form에 매핑될 ref들과 해당 ref들에 validation을 위한 rules
     // TODO: 생각해보니 객체 하나로 묶어서 관리하는게 더 좋을 것 같다.
+    // TODO: 반복되는 요소니 나중에 공통으로 빼기
     const formValid = ref(false);
 
     const categoryId = ref(null);
@@ -137,9 +138,7 @@ export default {
           title: title.value,
           content: content.value,
         }));
-        console.log(files.value)
         for (let i = 0; i < files.value.length; i += 1) {
-          console.log(files.value[i])
           formData.append("files", files.value[i]);
         }
         axios.post("/v1/articles", formData, {
@@ -158,7 +157,7 @@ export default {
               articlePerPage: 10,
               pageNum: 1,
             });
-            router.push("List")
+            router.push("/list")
           }
 
         }).catch(error => {

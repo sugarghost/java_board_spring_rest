@@ -133,7 +133,7 @@ public class ArticleService {
         }
 
         FileDTO fileDTO = FileUtil.uploadFile(file, fileProperty.getUploadPath());
-        fileDTO.setFileId(articleDTO.getArticleId());
+        fileDTO.setArticleId(articleDTO.getArticleId());
 
         int fileInsertResult = fileMapper.insertFile(fileDTO);
         if (fileInsertResult < 1) {
