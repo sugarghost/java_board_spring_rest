@@ -73,6 +73,15 @@ export default {
   name: "ArticleList",
 
   setup() {
+    // TODO: 라이프 사이클에 대한 이해를 기반으로 구성요소 분리가 필요함
+    // TODO: V-data-table 제외하고, paganation 디자인 요소를 가져오고 실제 구현 로직은 직접 하기
+    // TODO: V-data-table => table + pagnation 디자인도 빼고 그냥 실제 구현만 직접하기
+    // TODO: 라이플 사이클, 이벤트 버스 적용하기
+
+    // TODO: 프론트 개발은 내가 어떤 액션을 만들고, 어떻게 라이프 흐름이 따라가고를 이해하고 적용시키는 위주의 훈련을 하기(직접하기!)
+
+
+    // TODO: Vue란 무엇인가에 대해서 고민하기
     // 공통 요소
     const axios = inject("axios");
     const store = useStore();

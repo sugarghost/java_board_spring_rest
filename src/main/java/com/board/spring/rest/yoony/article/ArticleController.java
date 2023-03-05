@@ -63,7 +63,7 @@ public class ArticleController {
       throws CustomException, Exception {
     ObjectMapper objectMapper = new ObjectMapper();
     ArticleDTO articleDTO = objectMapper.readValue(articleDTOJson, ArticleDTO.class);
-
+  // TODO: RequestPart나 Json parse없이 바로 던지는 법 찾아보기
     if (articleDTO.isInsertArticleValid() == false) {
       throw new CustomExceptionView(ErrorCode.ARTICLE_INSERT_NOT_VALID);
     }
@@ -92,7 +92,12 @@ public class ArticleController {
       throws CustomException, Exception {
 
     int totalCount = articleService.selectArticleCount(searchDTO);
-
+    // TODO: DTO를 반환하면 내부에 모든 메소드 또한(Getter) 계산이 되서 반환이 되기 때문에 Validation은 따로 다 빼는게 좋음
+    // DTO는 가급적 하나로 통치기(안되면 어쩔 수 없지만)
+    // 문서 만드는 라이브러리들은 기본적으로 DTO 기반으로 문서를 뽑아줌
+    // 조회용으로 DTO로 뽑으면 쓰지도 않는 컬럼이 너무 많아서 문서가 복잡해지는 경우가 있어 따로 빼는 경우가 있음
+    // 쓰는것만 만들고자 하면 다 만들어야하고, 복잡해질수도 있고 정답은 없음
+    // 지금은 일단 통일성 있게 하기
     List<ArticleDTO> articleList = articleService.selectArticleList(searchDTO);
     if (articleList == null) {
       return status(HttpStatus.NO_CONTENT).body(null);
@@ -112,12 +117,14 @@ public class ArticleController {
    * @see ArticleService#selectArticle(long)
    * @see ArticleService#updateArticleHit(long)
    */
+  // TODO: 현재 프로젝트 구성에는 적합하지만, 규모가 커지면 분리가 필요할 것 같음
   @GetMapping("/{articleId}")
   public ResponseEntity getArticle(@PathVariable long articleId)
       throws CustomException, Exception {
     if (articleId == 0) {
       throw new CustomExceptionView(ErrorCode.ARTICLE_ID_NOT_VALID);
     }
+    // TODO: 일반적인 예외 상황은 넘어가거나, 전체적으로 전역처리 고려
     ArticleDTO articleDTO = articleService.selectArticle(articleId);
     if (articleDTO.getContent() == null) {
       return status(HttpStatus.NO_CONTENT).body(null);
@@ -153,6 +160,8 @@ public class ArticleController {
 
     ObjectMapper objectMapper = new ObjectMapper();
     ArticleDTO articleDTO = objectMapper.readValue(articleDTOJson, ArticleDTO.class);
+    // TODO: 중요 예외만 잡고 처리하는게 가독성 측면에서 좋아보임
+    // TODO: 많은 고민을 했음을 보여주고 싶다면 Validator를 따로 빼서 만들기
 
     if (articleId == 0) {
       throw new CustomExceptionView(ErrorCode.ARTICLE_ID_NOT_VALID);

@@ -57,7 +57,7 @@
     </v-form>
   </v-container>
 </template>
-  
+
 <script>
 import { ref, onBeforeMount, inject } from "vue";
 import { useStore } from "vuex";
@@ -74,7 +74,7 @@ export default {
 
     // 카테고리 목록 조회
     // TODO: List랑 중복되고 하는데, 공통 모듈로 따로 빼는 방안 고려 필요
-    // 
+    //
     const categories = ref([]);
     const getCategories = async () => {
       try {
@@ -138,9 +138,11 @@ export default {
           title: title.value,
           content: content.value,
         }));
+        // TODO: 비랍으로, 베이스로 다양한 방법으로 넘기는 방법이있음
         for (let i = 0; i < files.value.length; i += 1) {
           formData.append("files", files.value[i]);
         }
+        // TODO: axios는 별도로 빼기 + 인터셉터 적용(고려)
         axios.post("/v1/articles", formData, {
           headers: {
             "Content-Type": "multipart/form-data"

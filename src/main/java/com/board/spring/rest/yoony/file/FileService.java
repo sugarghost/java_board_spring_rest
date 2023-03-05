@@ -130,6 +130,7 @@ public class FileService {
    * @see FileUtil#downloadFile(FileDTO, List)
    */
   public ResponseEntity downloadFile(FileDTO fileDTO,List<String> rangeHeader) throws Exception {
+    // TODO: DTO대신 일반 String을 여러개 보내는 등 DTO와 의존성 분리
     return FileUtil.downloadFile(fileDTO, rangeHeader);
   }
 

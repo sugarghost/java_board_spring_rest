@@ -52,6 +52,9 @@ public class CommentController {
   @PostMapping
   public ResponseEntity createComment(@PathVariable long articleId, @RequestBody CommentDTO commentDTO)
       throws CustomException, Exception {
+    // TODO: 어노테이션으로 밸리데이터 만들기
+    // @Authention(auth=["01", "02"])
+
     if (articleId == 0) {
       throw new CustomExceptionView(ErrorCode.ARTICLE_ID_NOT_VALID);
     }
