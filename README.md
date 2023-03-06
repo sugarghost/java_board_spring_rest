@@ -1,11 +1,11 @@
-# Java_board_Spring
+# Java_board_Spring_
 간단한 게시판 프로젝트를 Spring+Vue 방식으로 구현한 프로젝트 입니다.        
 기존 Java_board_Spring에서 받은 피드백을 반영했고, 새롭게 피드백을 받아 지속적으로 개선 예정입니다.
 
 # 피드백 목차
 * [이전 Java_board_Spring 피드백](#이전-Java_board_Spring-피드백)
     + [추가 리팩토링](#추가-리팩토링)
-    + [Service return 유효성](#service return 유효성)
+    + [Service return 유효성](#service-return-유효성)
     + [Commans Naming](#commans-naming)
     + [Command 패턴의 필요성](#Command-패턴의-필요성)
     + [프로퍼티 네임은 전부 소문자](#프로퍼티-네임은-전부-소문자)
