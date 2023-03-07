@@ -5,7 +5,7 @@
 # 피드백 목차
 * [이전 Java_board_Spring 피드백](#이전-Java_board_Spring-피드백)
     + [추가 리팩토링](#추가-리팩토링)
-    + [Service return 유효성](#service-return-유효성)
+    + [Service return 유효성](#Service-return-유효성)
     + [Commans Naming](#commans-naming)
     + [Command 패턴의 필요성](#Command-패턴의-필요성)
     + [프로퍼티 네임은 전부 소문자](#프로퍼티-네임은-전부-소문자)
