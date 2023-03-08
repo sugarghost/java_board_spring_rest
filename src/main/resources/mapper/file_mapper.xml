@@ -22,7 +22,7 @@
     SELECT EXISTS(SELECT 1
                   FROM article_file
                   WHERE article_id = #{articleId}
-                  LIMIT 1) as is_file_exist
+                  LIMIT 1) AS is_file_exist
   </select>
   <delete id="deleteFile" parameterType="com.board.spring.rest.yoony.file.FileDTO">
     DELETE
