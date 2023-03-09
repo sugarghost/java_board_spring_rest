@@ -1,4 +1,3 @@
-
 export interface IArticle {
   articleId: bigint;
   categoryId: bigint;
@@ -7,8 +6,8 @@ export interface IArticle {
   content: string;
   title: string;
   viewCount: number;
-  createdDate: Date;
-  modifiedDate: Date;
+  createdDate: string;
+  modifiedDate: string;
   isFileExist: boolean;
 }
 export interface ISearchParams {

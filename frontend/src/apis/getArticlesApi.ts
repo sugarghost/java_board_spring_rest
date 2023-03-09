@@ -1,25 +1,25 @@
-import {ref, Ref} from "@vue/reactivity";
 import axios from "axios";
+import { ref, Ref } from "vue";
 
-import {usePagination} from "../assets/pagination";
-import {subStringWithSkipMark} from "@/assets/common";
-import type {IArticle, ISearchParams} from "../types/article";
+import { subStringWithSkipMark } from "@/assets/common";
+import usePagination from "../assets/pagination";
+import type { IArticle, ISearchParams } from "../types/article";
 
-export function articlesApi(
+export default function getArticlesApi(
   currentPage: Ref<number>,
-  rowsPerPage?: Ref<number>,
+  articlesPerPage?: Ref<number>,
   pagesPerBlock?: Ref<number>
 ) {
   const articles: Ref<IArticle[]> = ref([]);
 
   const articlesAreLoading = ref(false);
 
-  const totalCount = ref(0);
+  const totalArticleCount = ref(0);
 
-  const {numberOfPagesArray} = usePagination<IArticle>({
-    rowsPerPage,
+  const { totalPageCount, pageStart, pageEnd } = usePagination<IArticle>({
+    rowsPerPage: articlesPerPage,
     pagesPerBlock,
-    totalCount,
+    totalArticleCount,
     currentPage,
   });
 
@@ -30,11 +30,11 @@ export function articlesApi(
         params: {
           ...searchParams,
         },
-
       });
       articles.value = response.data.map((articleData: IArticle) => ({
         articleId: articleData.articleId,
-        title: subStringWithSkipMark(articleData.title, 80) + (articleData.isFileExist ? " 📎" : ""),
+        title:
+          subStringWithSkipMark(articleData.title, 80) + (articleData.isFileExist ? " 📎" : ""),
         writer: articleData.writer,
         viewCount: articleData.viewCount,
         categoryName: articleData.categoryName,
@@ -42,7 +42,7 @@ export function articlesApi(
         modifiedDate: articleData.modifiedDate,
         isFileExist: articleData.isFileExist,
       }));
-      totalCount.value = Number(response.headers["x-total-count"]);
+      totalArticleCount.value = Number(response.headers["x-total-count"]);
     } catch (err) {
       console.log(err);
     } finally {
@@ -52,9 +52,11 @@ export function articlesApi(
 
   return {
     articles,
-    getArticles: getArticles,
-    articlesAreLoading: articlesAreLoading,
-    numberOfPagesArray,
-    totalCount
+    getArticles,
+    articlesAreLoading,
+    totalPageCount,
+    totalArticleCount,
+    pageStart,
+    pageEnd,
   };
 }

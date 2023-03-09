@@ -7,7 +7,7 @@ export default createStore({
       startDate: null,
       endDate: null,
       searchWord: null,
-      articlePerPage: 10,
+      articlePerPage: 5,
       pageNum: 1,
     },
   },

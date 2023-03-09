@@ -3,21 +3,24 @@ import { computed, Ref, ref } from "vue";
 interface PaginationConfig<T> {
   rowsPerPage?: Ref<number>;
   pagesPerBlock?: Ref<number>;
-  totalCount?: Ref<number>;
+  totalArticleCount: Ref<number>;
   currentPage: Ref<number>;
 }
 
-export function usePagination<T>(config: PaginationConfig<T>) {
+export default function usePagination<T>(config: PaginationConfig<T>) {
   const rowsPerPage = config.rowsPerPage || ref(5);
-  const totalCount = config.totalCount || ref(0);
-
-  const numberOfPagesArray = computed(() =>Array.from(
-      { length: (stop - start) / 1 + 1 },
-      (value, index) => start + index * 1
-    )
+  const pagesPerBlock = config.pagesPerBlock || ref(10);
+  const pageStart = computed(
+    () => Math.floor((config.currentPage.value - 1) / pagesPerBlock.value) * pagesPerBlock.value + 1
+  );
+  const pageEnd = computed(() => pageStart.value + pagesPerBlock.value - 1);
+  const totalPageCount = computed(() =>
+    Math.ceil(config.totalArticleCount.value / rowsPerPage.value)
   );
 
   return {
-    numberOfPagesArray
+    pageStart,
+    pageEnd,
+    totalPageCount,
   };
 }

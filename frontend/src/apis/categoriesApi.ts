@@ -1,9 +1,8 @@
-import {ref, Ref} from "@vue/reactivity";
+import { ref, Ref } from "vue";
 import axios from "axios";
-import type {ICategory} from "../types/category";
+import type { ICategory } from "../types/category";
 
-
-export function categoriesApi() {
+export default function categoriesApi() {
   const categories: Ref<ICategory[]> = ref([]);
 
   const getCategories = async () => {
@@ -18,6 +17,6 @@ export function categoriesApi() {
 
   return {
     categories,
-    getCategories
+    getCategories,
   };
 }

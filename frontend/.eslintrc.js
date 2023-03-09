@@ -9,6 +9,7 @@ module.exports = {
     ecmaVersion: 2020,
   },
   rules: {
+    "vuejs-accessibility/click-events-have-key-events": "off",
     "vuejs-accessibility/form-control-has-label": "off",
     "vuejs-accessibility/label-has-for": "off",
     quotes: [2, "double"],
