@@ -62,12 +62,12 @@
 import { ref, onBeforeMount, inject } from "vue";
 import { useStore } from "vuex";
 import { useRouter, useRoute } from "vue-router"
+import axios from "../axios/axios";
 
 export default {
   name: "ArticleWrite",
 
   setup() {
-    const axios = inject("axios");
     const store = useStore();
     const router = useRouter();
 
@@ -78,7 +78,7 @@ export default {
     const categories = ref([]);
     const getCategories = async () => {
       try {
-        const response = await axios.get("/v1/categories", {});
+        const response = await axios.get("/categories", {});
 
         categories.value = response.data.map((categoryData) => ({
           categoryId: categoryData.categoryId,
@@ -145,7 +145,7 @@ export default {
           formData.append("files", files.value[i]);
         }
         // TODO: axios는 별도로 빼기 + 인터셉터 적용(고려)
-        axios.post("/v1/articles", formData, {
+        axios.post("/articles", formData, {
           headers: {
             "Content-Type": "multipart/form-data"
           }

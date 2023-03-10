@@ -94,13 +94,13 @@
 import { ref, onBeforeMount, inject } from "vue";
 import { useStore } from "vuex";
 import { useRouter, useRoute } from "vue-router"
+import axios from "../axios/axios";
 import { formatDateSecond } from "../assets/common";
 
 export default {
     name: "ArticleModify",
 
     setup() {
-        const axios = inject("axios");
         const store = useStore();
         const router = useRouter();
         const route = useRoute();
@@ -122,7 +122,7 @@ export default {
         // article Data 가져오기
         const getArticle = async () => {
             try {
-                const response = await axios.get(`/v1/articles/${articleId}`, {});
+                const response = await axios.get(`/articles/${articleId}`, {});
                 article.value = response.data;
             } catch (error) {
                 console.error(error);
@@ -136,7 +136,7 @@ export default {
         const fileList = ref([]);
         const getFileList = async () => {
             try {
-                const response = await axios.get(`/v1/articles/${articleId}/files`, {});
+                const response = await axios.get(`/articles/${articleId}/files`, {});
                 fileList.value = response.data;
 
             } catch (error) {
@@ -151,7 +151,7 @@ export default {
         const fileDownload = async (fileId) => {
             try {
                 // TODO: spring Server에 Range 구현은 했지만 사용은 보류(테스트도 안해봄)
-                const response = await axios.get(`/v1/articles/${articleId}/files/${fileId}`, {
+                const response = await axios.get(`/articles/${articleId}/files/${fileId}`, {
                     responseType: "blob",
                     headers: {
                         "Accept": "application/octet-stream"
@@ -223,7 +223,7 @@ export default {
                     formData.append("files", files.value[i]);
                 }
 
-                axios.put(`/v1/articles/${articleId}`, formData, {
+                axios.put(`/articles/${articleId}`, formData, {
                     headers: {
                         "Content-Type": "multipart/form-data"
                     }

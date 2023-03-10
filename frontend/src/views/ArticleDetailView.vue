@@ -99,14 +99,15 @@
 <script>
 import { ref, computed, onBeforeMount, inject } from "vue";
 import { useStore } from "vuex";
+
 import { useRouter, useRoute } from "vue-router";
+import axios from "../axios/axios";
 import { formatDateSecond } from "../assets/common";
 
 export default {
   name: "ArticleDetail",
   setup() {
     // 공통 요소
-    const axios = inject("axios");
     const route = useRoute();
     const router = useRouter();
 
@@ -126,7 +127,7 @@ export default {
     // article Data 가져오기
     const getArticle = async () => {
       try {
-        const response = await axios.get(`/v1/articles/${articleId}`, {});
+        const response = await axios.get(`/articles/${articleId}`, {});
         article.value = response.data;
       } catch (error) {
         console.error(error);
@@ -140,7 +141,7 @@ export default {
     const commentList = ref([]);
     const getCommentList = async () => {
       try {
-        const response = await axios.get(`/v1/articles/${articleId}/comments`, {});
+        const response = await axios.get(`/articles/${articleId}/comments`, {});
         commentList.value = {
           ...response.data,
         };
@@ -166,7 +167,7 @@ export default {
         return;
       }
       try {
-        const response = await axios.post(`/v1/articles/${articleId}/comments`, {
+        const response = await axios.post(`/articles/${articleId}/comments`, {
           content: commentContent.value,
         });
         // 성공한 경우에만 댓글 목록 갱신
@@ -182,7 +183,7 @@ export default {
     const fileList = ref([]);
     const getFileList = async () => {
       try {
-        const response = await axios.get(`/v1/articles/${articleId}/files`, {});
+        const response = await axios.get(`/articles/${articleId}/files`, {});
         fileList.value = response.data;
       } catch (error) {
         console.error(error);
@@ -196,7 +197,7 @@ export default {
     const fileDownload = async (fileId) => {
       try {
         // TODO: spring Server에 Range 구현은 했지만 사용은 보류(테스트도 안해봄)
-        const response = await axios.get(`/v1/articles/${articleId}/files/${fileId}`, {
+        const response = await axios.get(`/articles/${articleId}/files/${fileId}`, {
           responseType: "blob",
           headers: {
             Accept: "application/octet-stream",
@@ -236,7 +237,7 @@ export default {
         return;
       }
       try {
-        const response = await axios.delete(`/v1/articles/${articleId}`, {
+        const response = await axios.delete(`/articles/${articleId}`, {
           data: {
             articleId,
             password: password.value,

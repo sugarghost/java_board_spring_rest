@@ -1,7 +1,7 @@
-import axios from "axios";
 import { ref, Ref } from "vue";
 
 import { subStringWithSkipMark } from "@/assets/common";
+import axios from "../axios/axios";
 import usePagination from "../assets/pagination";
 import type { IArticle, ISearchParams } from "../types/article";
 
@@ -26,7 +26,7 @@ export default function getArticlesApi(
   const getArticles = async (searchParams: ISearchParams) => {
     articlesAreLoading.value = true;
     try {
-      const response = await axios.get("/v1/articles", {
+      const response = await axios.get("/articles", {
         params: {
           ...searchParams,
         },

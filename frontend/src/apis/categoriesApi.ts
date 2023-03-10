@@ -1,5 +1,5 @@
 import { ref, Ref } from "vue";
-import axios from "axios";
+import axios from "../axios/axios";
 import type { ICategory } from "../types/category";
 
 export default function categoriesApi() {
@@ -7,7 +7,7 @@ export default function categoriesApi() {
 
   const getCategories = async () => {
     try {
-      const response = await axios.get("/v1/categories", {});
+      const response = await axios.get("/categories", {});
 
       categories.value = response.data;
     } catch (error) {
