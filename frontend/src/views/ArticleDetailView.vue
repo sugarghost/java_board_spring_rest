@@ -168,6 +168,7 @@ export default {
       }
       try {
         const response = await axios.post(`/articles/${articleId}/comments`, {
+          articleId,
           content: commentContent.value,
         });
         // 성공한 경우에만 댓글 목록 갱신

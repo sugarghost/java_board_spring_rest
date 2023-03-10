@@ -4,6 +4,8 @@ import com.board.spring.rest.yoony.article.ArticleService;
 import com.board.spring.rest.yoony.error.CustomException;
 import com.board.spring.rest.yoony.error.CustomExceptionView;
 import com.board.spring.rest.yoony.error.ErrorCode;
+import com.board.spring.rest.yoony.validation.article.ArticleIdValidation;
+import com.board.spring.rest.yoony.validation.file.FileIdValidation;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,18 +90,9 @@ public class FileController {
    * @since 2023-03-04
    */
   @GetMapping("/{fileId}")
-  public ResponseEntity getFile(@PathVariable long fileId, @PathVariable long articleId,
+  public ResponseEntity getFile(@FileIdValidation @PathVariable long fileId, @ArticleIdValidation @PathVariable long articleId,
       @RequestHeader HttpHeaders headers)
       throws CustomException, Exception {
-    if (articleId == 0) {
-      throw new CustomExceptionView(ErrorCode.ARTICLE_ID_NOT_VALID);
-    }
-    if (articleService.isArticleExist(articleId) == false) {
-      throw new CustomExceptionView(ErrorCode.ARTICLE_NOT_FOUND);
-    }
-    if (fileId == 0) {
-      throw new CustomExceptionView(ErrorCode.File_ID_NOT_VALID);
-    }
     FileDTO fileDTO = new FileDTO();
     fileDTO.setFileId(fileId);
     fileDTO.setArticleId(articleId);

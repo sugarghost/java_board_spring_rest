@@ -1,33 +1,61 @@
 <template>
   <div class="pagination-container" aria-label="row pagination">
     <ul v-if="totalPageCount >= 1" class="pagination">
-      <li class="page-item" aria-label="처음 페이지" @click="first()" :class="{
-        disabled: currentPage === 1,
-      }">
+      <li
+        class="page-item"
+        aria-label="처음 페이지"
+        @click="first()"
+        :class="{
+          disabled: currentPage === 1,
+        }"
+      >
         <span class="page-link">&laquo;&laquo;</span>
       </li>
-      <li class="page-item" aria-label="이전 페이지" @click="previous()" :class="{
-        disabled: currentPage === 1,
-      }">
+      <li
+        class="page-item"
+        aria-label="이전 페이지"
+        @click="previous()"
+        :class="{
+          disabled: currentPage === 1,
+        }"
+      >
         <span class="page-link">&laquo;</span>
       </li>
 
-      <li v-for="index in pageRangeArray" :key="index" :aria-label="'페이지: ' + index" class="page-item"
-        @click="setCurrentPage(index)">
-        <div class="page-link" :class="{
-          'active-page': currentPage === index,
-        }">
+      <li
+        v-for="index in pageRangeArray"
+        :key="index"
+        :aria-label="'페이지: ' + index"
+        class="page-item"
+        @click="setCurrentPage(index)"
+      >
+        <div
+          class="page-link"
+          :class="{
+            'active-page': currentPage === index,
+          }"
+        >
           {{ index }}
         </div>
       </li>
-      <li class="page-item" :class="{
-        disabled: currentPage === totalPageCount,
-      }" aria-label="다음 페이지" @click="next()">
+      <li
+        class="page-item"
+        :class="{
+          disabled: currentPage === totalPageCount,
+        }"
+        aria-label="다음 페이지"
+        @click="next()"
+      >
         <div class="page-link">&raquo;</div>
       </li>
-      <li class="page-item" :class="{
-        disabled: currentPage === totalPageCount,
-      }" aria-label="마지막 페이지" @click="last()">
+      <li
+        class="page-item"
+        :class="{
+          disabled: currentPage === totalPageCount,
+        }"
+        aria-label="마지막 페이지"
+        @click="last()"
+      >
         <div class="page-link">&raquo;&raquo;</div>
       </li>
     </ul>
@@ -85,14 +113,11 @@ const next = () => {
   emit("update:modelValue", currentPage.value + 1);
 };
 
-
 const last = () => {
   if (currentPage.value >= totalPageCount.value) return;
   emit("update:modelValue", totalPageCount.value);
 };
-
 </script>
-
 
 <style scoped lang="scss">
 .pagination-container {

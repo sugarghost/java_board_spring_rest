@@ -4,12 +4,16 @@ import com.board.spring.rest.yoony.article.ArticleService;
 import com.board.spring.rest.yoony.error.CustomException;
 import com.board.spring.rest.yoony.error.CustomExceptionView;
 import com.board.spring.rest.yoony.error.ErrorCode;
+import com.board.spring.rest.yoony.validation.article.ArticleIdValidation;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -50,19 +54,10 @@ public class CommentController {
    * @since 2023-03-04
    */
   @PostMapping
-  public ResponseEntity createComment(@PathVariable long articleId, @RequestBody CommentDTO commentDTO)
+  public ResponseEntity createComment(@ArticleIdValidation @PathVariable long articleId, @Validated @RequestBody CommentDTO commentDTO, Errors errors)
       throws CustomException, Exception {
-    // TODO: 어노테이션으로 밸리데이터 만들기
-    // @Authention(auth=["01", "02"])
 
-    if (articleId == 0) {
-      throw new CustomExceptionView(ErrorCode.ARTICLE_ID_NOT_VALID);
-    }
-    if (articleService.isArticleExist(articleId) == false) {
-      throw new CustomExceptionView(ErrorCode.ARTICLE_NOT_FOUND);
-    }
-
-    if (commentDTO.isContentValid() == false) {
+    if (errors.hasErrors()) {
       throw new CustomExceptionView(ErrorCode.COMMENT_CONTENT_NOT_VALID);
     }
     commentDTO.setArticleId(articleId);
