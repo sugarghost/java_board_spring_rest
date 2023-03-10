@@ -88,18 +88,11 @@ public class ArticleController {
       throws CustomException, Exception {
 
     int totalCount = articleService.selectArticleCount(searchDTO);
-    // TODO: DTO를 반환하면 내부에 모든 메소드 또한(Getter) 계산이 되서 반환이 되기 때문에 Validation은 따로 다 빼는게 좋음
-    // DTO는 가급적 하나로 통치기(안되면 어쩔 수 없지만)
-    // 문서 만드는 라이브러리들은 기본적으로 DTO 기반으로 문서를 뽑아줌
-    // 조회용으로 DTO로 뽑으면 쓰지도 않는 컬럼이 너무 많아서 문서가 복잡해지는 경우가 있어 따로 빼는 경우가 있음
-    // 쓰는것만 만들고자 하면 다 만들어야하고, 복잡해질수도 있고 정답은 없음
-    // 지금은 일단 통일성 있게 하기
     List<ArticleDTO> articleList = articleService.selectArticleList(searchDTO);
     if (articleList == null) {
       return status(HttpStatus.NO_CONTENT).body(null);
     }
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Access-Control-Expose-Headers", "X-Total-Count");
     headers.set("X-Total-Count", String.valueOf(totalCount));
     return new ResponseEntity(articleList, headers, HttpStatus.OK);
   }
@@ -114,7 +107,6 @@ public class ArticleController {
    * @see ArticleService#selectArticle(long)
    * @see ArticleService#updateArticleHit(long)
    */
-  // TODO: 현재 프로젝트 구성에는 적합하지만, 규모가 커지면 분리가 필요할 것 같음
   @GetMapping("/{articleId}")
   public ResponseEntity getArticle(@ArticleIdValidation @PathVariable long articleId)
       throws CustomException, Exception {

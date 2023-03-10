@@ -5,16 +5,12 @@ import com.board.spring.rest.yoony.error.CustomException;
 import com.board.spring.rest.yoony.error.ErrorCode;
 import com.board.spring.rest.yoony.file.FileDTO;
 import com.board.spring.rest.yoony.file.FileMapper;
-import com.board.spring.rest.yoony.file.FileProperty;
 import com.board.spring.rest.yoony.util.FileUtil;
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,8 +35,9 @@ public class ArticleService {
 
   @Autowired
   private FileMapper fileMapper;
-  @Autowired
-  private FileProperty fileProperty;
+
+  @Value("${spring.servlet.multipart.location}")
+  private String uploadPath;
 
   /**
    * 게시글을 생성하는 메소드(비활성화) 현재 사용 로직은 File을 같이 생성하는 로직만 사용하기 때문에 비활성화
@@ -90,7 +87,7 @@ public class ArticleService {
           continue;
         }
 
-        FileDTO fileDTO = FileUtil.uploadFile(file, fileProperty.getUploadPath());
+        FileDTO fileDTO = FileUtil.uploadFile(file, uploadPath);
         fileDTO.setArticleId(articleDTO.getArticleId());
 
         int fileInsertResult = fileMapper.insertFile(fileDTO);
@@ -229,7 +226,7 @@ public class ArticleService {
           continue;
         }
 
-        FileDTO fileDTO = FileUtil.uploadFile(file, fileProperty.getUploadPath());
+        FileDTO fileDTO = FileUtil.uploadFile(file, uploadPath);
         fileDTO.setArticleId(articleDTO.getArticleId());
 
         int fileInsertResult = fileMapper.insertFile(fileDTO);

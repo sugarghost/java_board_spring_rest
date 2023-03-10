@@ -12,6 +12,9 @@ public class WebConfig implements WebMvcConfigurer {
     registry.addMapping("/v1/**")
         .allowedOrigins("http://localhost:8080")
         .allowedMethods("GET", "POST", "PUT", "DELETE")
+        .exposedHeaders("X-Total-Count",
+            "Content-Range", "Content-Type", "Accept-Ranges", "Content-Length"
+            , "Content-Disposition")
         .allowCredentials(true);
   }
 }

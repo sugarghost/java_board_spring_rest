@@ -25,9 +25,13 @@
       <v-col class="w-100">
         <template v-if="article.isFileExist">
           <template v-for="fileDTO in fileList" :key="fileDTO.fileId">
-            <a href="javascript:void(0);" @click="fileDownload(fileDTO.fileId)">
+            <a
+              href="javascript:void(0);"
+              @click="fileDownload(fileDTO.fileId, fileDTO.fileOriginName)"
+            >
               {{ fileDTO.fileOriginName }}
             </a>
+            <br />
           </template>
         </template>
       </v-col>
@@ -195,7 +199,7 @@ export default {
     });
 
     // file download
-    const fileDownload = async (fileId) => {
+    const fileDownload = async (fileId, fileOriginName) => {
       try {
         // TODO: spring Server에 Range 구현은 했지만 사용은 보류(테스트도 안해봄)
         const response = await axios.get(`/articles/${articleId}/files/${fileId}`, {
@@ -204,13 +208,11 @@ export default {
             Accept: "application/octet-stream",
           },
         });
+        console.log(response);
         const url = window.URL.createObjectURL(new Blob([response.data]));
         const link = document.createElement("a");
         link.href = url;
-        link.setAttribute(
-          "download",
-          response.headers["content-disposition"].split("filename=")[1]
-        );
+        link.setAttribute("download", fileOriginName);
         document.body.appendChild(link);
         link.click();
       } catch (error) {

@@ -132,7 +132,6 @@ public class FileService {
   public ResponseEntity downloadFile(FileDTO fileDTO, List<String> rangeHeader) throws Exception {
     return FileUtil.downloadFile(fileDTO.getFilePath(),
         fileDTO.getFileSaveName(),
-        fileDTO.getFileOriginName(),
         rangeHeader);
   }
 
