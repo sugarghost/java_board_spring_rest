@@ -27,7 +27,6 @@ public interface ArticleMapper {
    * @return int 등록된 게시글의 개수
    * @author yoony
    * @version 1.0
-   * @see ArticleDTO#isInsertArticleValid()
    * @since 2023. 02. 26.
    */
   public int insertArticle(ArticleDTO articleDTO);

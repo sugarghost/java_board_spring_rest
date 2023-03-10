@@ -28,9 +28,21 @@ public enum ErrorCode {
    */
   ARTICLE_ID_NOT_VALID(400, "ARTICLE.ERR.400.DTO.ID", "ARTICLE ID NOT VALID"),
   /**
+   * 게시글 작성자가 유효하지 않음
+   */
+  ARTICLE_WRITER_NOT_VALID(400, "ARTICLE.ERR.400.DTO.WRITER", "ARTICLE WRITER NOT VALID"),
+  /**
    * 게시글 패스워드가 유효하지 않음
    */
   ARTICLE_PASSWORD_NOT_VALID(400, "ARTICLE.ERR.400.DTO.PASSWORD", "ARTICLE PASSWORD NOT VALID"),
+  /**
+   * 게시글 제목이 유효하지 않음
+   */
+  ARTICLE_TITLE_NOT_VALID(400, "ARTICLE.ERR.400.DTO.TITLE", "ARTICLE TITLE NOT VALID"),
+  /**
+   * 게시글 내용이 유효하지 않음
+   */
+  ARTICLE_CONTENT_NOT_VALID(400, "ARTICLE.ERR.400.DTO.CONTENT", "ARTICLE CONTENT NOT VALID"),
   /**
    * 게시글 추가시 유효하지 않은 값이 있음
    */

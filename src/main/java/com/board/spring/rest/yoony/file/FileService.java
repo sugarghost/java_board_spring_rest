@@ -120,18 +120,20 @@ public class FileService {
   /**
    * 파일을 다운로드하는 서비스
    *
-   * @param fileDTO 파일 정보를 담은 DTO
+   * @param fileDTO     파일 정보를 담은 DTO
    * @param rangeHeader Range 헤더
    * @return ResponseEntity 형태의 파일 다운로드 정보
    * @throws Exception (파일 다운로드 실패시 발생)
    * @author YK
    * @version 1.0
-   * @since 2023-03-04
    * @see FileUtil#downloadFile(FileDTO, List)
+   * @since 2023-03-04
    */
-  public ResponseEntity downloadFile(FileDTO fileDTO,List<String> rangeHeader) throws Exception {
-    // TODO: DTO대신 일반 String을 여러개 보내는 등 DTO와 의존성 분리
-    return FileUtil.downloadFile(fileDTO, rangeHeader);
+  public ResponseEntity downloadFile(FileDTO fileDTO, List<String> rangeHeader) throws Exception {
+    return FileUtil.downloadFile(fileDTO.getFilePath(),
+        fileDTO.getFileSaveName(),
+        fileDTO.getFileOriginName(),
+        rangeHeader);
   }
 
 }

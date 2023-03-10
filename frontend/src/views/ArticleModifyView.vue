@@ -207,12 +207,14 @@ export default {
             // form validation 체크
             if (formValid.value) {
                 const formData = new FormData();
-                formData.append("articleDTO", JSON.stringify({
-                    writer: writer.value,
-                    password: password.value,
-                    title: title.value,
-                    content: content.value,
-                }));
+                formData.append("articleDTO",
+                    new Blob([JSON.stringify({
+                        articleId,
+                        writer: writer.value,
+                        password: password.value,
+                        title: title.value,
+                        content: content.value,
+                    })], { type: "application/json" }));
                 for (let i = 0; i < deleteFiles.value.length; i += 1) {
                     formData.append("deleteFiles", deleteFiles.value[i]);
                 }

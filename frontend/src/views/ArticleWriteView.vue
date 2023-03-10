@@ -131,13 +131,15 @@ export default {
       // form validation 체크
       if (formValid.value) {
         const formData = new FormData();
-        formData.append("articleDTO", JSON.stringify({
-          categoryId: categoryId.value,
-          writer: writer.value,
-          password: password.value,
-          title: title.value,
-          content: content.value,
-        }));
+        formData.append("articleDTO",
+          new Blob([JSON.stringify({
+            categoryId: categoryId.value,
+            writer: writer.value,
+            password: password.value,
+            title: title.value,
+            content: content.value,
+          })], { type: "application/json" })
+        );
         // TODO: 비랍으로, 베이스로 다양한 방법으로 넘기는 방법이있음
         for (let i = 0; i < files.value.length; i += 1) {
           formData.append("files", files.value[i]);
