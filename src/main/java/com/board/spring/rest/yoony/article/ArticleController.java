@@ -99,6 +99,7 @@ public class ArticleController {
       return status(HttpStatus.NO_CONTENT).body(null);
     }
     HttpHeaders headers = new HttpHeaders();
+    headers.set("Access-Control-Expose-Headers", "X-Total-Count");
     headers.set("X-Total-Count", String.valueOf(totalCount));
     return new ResponseEntity(articleList, headers, HttpStatus.OK);
   }

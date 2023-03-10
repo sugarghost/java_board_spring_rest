@@ -11,11 +11,22 @@
         <v-text-field type="date" v-model="searchParams.endDate" outlined color="primary" />
       </v-col>
       <v-col cols="2">
-        <v-select v-model="searchParams.categoryId" :items="categories" item-title="name" item-value="categoryId"
-          single-line label="카테고리"></v-select>
+        <v-select
+          v-model="searchParams.categoryId"
+          :items="categories"
+          item-title="name"
+          item-value="categoryId"
+          single-line
+          label="카테고리"
+        ></v-select>
       </v-col>
       <v-col cols="2">
-        <v-text-field v-model="searchParams.searchWord" placeholder="제목, 내용, 작성자 검색" outlined color="primary" />
+        <v-text-field
+          v-model="searchParams.searchWord"
+          placeholder="제목, 내용, 작성자 검색"
+          outlined
+          color="primary"
+        />
       </v-col>
       <v-col cols="2">
         <input type="hidden" name="pageNum" value="1" />
@@ -37,7 +48,6 @@
               <th>등록일</th>
               <th>수정일</th>
             </tr>
-
           </thead>
           <tbody>
             <tr v-for="item in articles" :key="String(item.articleId)">
@@ -57,8 +67,13 @@
       </v-col>
     </v-row>
 
-    <pagination-component class="pagination-component" v-model="currentPage" :pageStart="pageStart" :pageEnd="pageEnd"
-      :totalPageCount="totalPageCount" />
+    <pagination-component
+      class="pagination-component"
+      v-model="currentPage"
+      :pageStart="pageStart"
+      :pageEnd="pageEnd"
+      :totalPageCount="totalPageCount"
+    />
     <v-row>
       <v-col class="d-flex justify-end">
         <v-btn color="primary" @click="$router.push('/write')">글쓰기</v-btn>
@@ -77,7 +92,7 @@ import categoriesApi from "../apis/categoriesApi";
 import PaginationComponent from "../components/PaginationComponent.vue";
 
 const store = useStore();
-const route = useRoute()
+const route = useRoute();
 
 if (route.query) {
   const searchParamsQuery = store.getters.searchParams;
@@ -112,7 +127,7 @@ onBeforeMount(() => {
 
 // articleList 관련요소
 const searchParams = ref(store.getters.searchParams);
-const currentPage = ref(1);
+const currentPage = ref(searchParams.value.pageNum);
 const articlesPerPage = ref(searchParams.value.articlePerPage);
 const {
   articles,
@@ -121,11 +136,8 @@ const {
   totalArticleCount,
   pageStart,
   pageEnd,
-  totalPageCount
-} = getArticlesApi(
-  currentPage,
-  articlesPerPage,
-);
+  totalPageCount,
+} = getArticlesApi(currentPage, articlesPerPage);
 
 onBeforeMount(() => {
   getArticles(searchParams.value);
@@ -134,14 +146,17 @@ onBeforeMount(() => {
 // search 관련
 const searchArticles = () => {
   searchParams.value.pageNum = 1;
+  currentPage.value = 1;
   store.commit("updateSearchParams", searchParams.value);
   getArticles(searchParams.value);
 };
 
-watch(() => currentPage.value, (newVal) => {
-  searchParams.value.pageNum = newVal;
-  store.commit("updateSearchParams", searchParams.value);
-  getArticles(searchParams.value);
-});
-
+watch(
+  () => currentPage.value,
+  (newVal) => {
+    searchParams.value.pageNum = newVal;
+    store.commit("updateSearchParams", searchParams.value);
+    getArticles(searchParams.value);
+  }
+);
 </script>
