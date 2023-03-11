@@ -74,26 +74,6 @@ public class FileUtil {
 
     if (resource.exists() || resource.isReadable()) {
       long contentLength = resource.contentLength();
-      /*
-      if (rangeHeader != null && !rangeHeader.isEmpty()) {
-        String range = rangeHeader.get(0);
-        String[] rangeParts = range.split("=");
-        String rangeUnit = rangeParts[0];
-        String rangeValue = rangeParts[1];
-        String[] rangeValues = rangeValue.split("-");
-        long startRange = Long.parseLong(rangeValues[0]);
-        long endRange = Math.min(Long.parseLong(rangeValues[1]), contentLength - 1);
-        long downloadSize = Math.max(0, endRange - startRange + 1);
-        if (rangeUnit.equals("bytes")) {
-          return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
-              .header(HttpHeaders.CONTENT_RANGE,
-                  "bytes " + startRange + "-" + endRange + "/" + contentLength)
-              .header(HttpHeaders.ACCEPT_RANGES, "bytes")
-              .header(HttpHeaders.CONTENT_LENGTH, String.valueOf(downloadSize))
-              .body(resource);
-        }
-      }
-      */
       return ResponseEntity.ok()
           .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;")
           .header(HttpHeaders.CONTENT_LENGTH, String.valueOf(contentLength))
