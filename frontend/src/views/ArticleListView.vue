@@ -54,7 +54,7 @@
               <td>{{ item.categoryName }}</td>
               <td>
                 <span @click="$router.push('/view/' + item.articleId)">
-                  {{ item.title }}
+                  {{ subStringWithSkipMark(item.title, 80) }} {{ item.isFileExist ? " 📎" : "" }}
                 </span>
               </td>
               <td>{{ item.writer }}</td>
@@ -89,7 +89,9 @@ import { useRouter, useRoute } from "vue-router";
 import { formatDate, subStringWithSkipMark } from "../assets/common";
 import getArticlesApi from "../apis/getArticlesApi";
 import categoriesApi from "../apis/categoriesApi";
+import usePagination from "../assets/pagination";
 import PaginationComponent from "../components/PaginationComponent.vue";
+import type { IArticle, ISearchParams } from "../types/article";
 
 const store = useStore();
 const route = useRoute();
@@ -126,21 +128,21 @@ onBeforeMount(() => {
 });
 
 // articleList 관련요소
-const searchParams = ref(store.getters.searchParams);
-const currentPage = ref(searchParams.value.pageNum);
-const articlesPerPage = ref(searchParams.value.articlePerPage);
-const {
-  articles,
-  articlesAreLoading,
-  getArticles,
-  totalArticleCount,
-  pageStart,
-  pageEnd,
-  totalPageCount,
-} = getArticlesApi(currentPage, articlesPerPage);
+const searchParams = ref<ISearchParams>(store.getters.searchParams);
+const { articles, articlesAreLoading, getArticles, totalArticleCount } = getArticlesApi();
 
 onBeforeMount(() => {
   getArticles(searchParams.value);
+});
+
+const currentPage = ref(searchParams.value.pageNum);
+const pagesPerBlock = ref(5);
+const rowsPerPage = ref(searchParams.value.articlePerPage);
+const { totalPageCount, pageStart, pageEnd } = usePagination<IArticle>({
+  rowsPerPage,
+  pagesPerBlock,
+  totalArticleCount,
+  currentPage,
 });
 
 // search 관련
@@ -153,8 +155,8 @@ const searchArticles = () => {
 
 watch(
   () => currentPage.value,
-  (newVal) => {
-    searchParams.value.pageNum = newVal;
+  (newValue) => {
+    searchParams.value.pageNum = newValue;
     store.commit("updateSearchParams", searchParams.value);
     getArticles(searchParams.value);
   }
