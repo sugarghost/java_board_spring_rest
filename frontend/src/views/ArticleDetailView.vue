@@ -108,6 +108,8 @@ import { useRouter, useRoute } from "vue-router";
 import axios from "../axios/axios";
 import { formatDateSecond } from "../assets/common";
 
+import { getArticleApi } from "../apis/getArticlesApi";
+
 export default {
   name: "ArticleDetail",
   setup() {
@@ -117,28 +119,11 @@ export default {
 
     // article Data 구성요소
     const { articleId } = route.params;
-    const article = ref({
-      writer: "",
-      title: "",
-      content: "",
-      categoryName: "",
-      viewCount: 0,
-      isFileExist: false,
-      createdDate: "",
-      modifiedDate: "",
-    });
 
-    // article Data 가져오기
-    const getArticle = async () => {
-      try {
-        const response = await axios.get(`/articles/${articleId}`, {});
-        article.value = response.data;
-      } catch (error) {
-        console.error(error);
-      }
-    };
+    const { article, getArticle } = getArticleApi();
+
     onBeforeMount(() => {
-      getArticle();
+      getArticle(articleId);
     });
 
     // comment Data 가져오기

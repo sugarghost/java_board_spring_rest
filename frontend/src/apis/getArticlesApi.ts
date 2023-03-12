@@ -3,8 +3,7 @@ import { ref, Ref } from "vue";
 import axios from "../axios/axios";
 import type { IArticle, ISearchParams } from "../types/article";
 
-export default function getArticlesApi(
-) {
+export function getArticlesApi() {
   const articles: Ref<IArticle[]> = ref([]);
 
   const articlesAreLoading = ref(false);
@@ -19,7 +18,7 @@ export default function getArticlesApi(
           ...searchParams,
         },
       });
-      articles.value = response.data
+      articles.value = response.data;
       totalArticleCount.value = Number(response.headers["x-total-count"]);
     } catch (err) {
       console.log(err);
@@ -33,5 +32,23 @@ export default function getArticlesApi(
     getArticles,
     articlesAreLoading,
     totalArticleCount,
+  };
+}
+
+export function getArticleApi() {
+  const article: Ref<IArticle> = ref({} as IArticle);
+
+  const getArticle = async (articleId: number) => {
+    try {
+      const response = await axios.get(`/articles/${articleId}`, {});
+      article.value = response.data;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  return {
+    article,
+    getArticle,
   };
 }
