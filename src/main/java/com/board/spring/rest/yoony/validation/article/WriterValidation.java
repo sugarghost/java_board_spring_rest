@@ -9,7 +9,14 @@ import java.lang.annotation.Target;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 
-
+/**
+ * article writer 검증
+ *
+ * @author yoony
+ * @version 1.0
+ * @see WriterValidator
+ * @since 2023. 03. 12.
+ */
 @Documented
 @Constraint(validatedBy = WriterValidator.class)
 @Target({ElementType.FIELD})

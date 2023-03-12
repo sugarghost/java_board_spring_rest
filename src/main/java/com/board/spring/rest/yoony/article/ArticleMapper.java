@@ -101,7 +101,6 @@ public interface ArticleMapper {
   /**
    * 게시글을 수정하는 메소드
    * <p>modeifiedDate는 current_timestamp로 입력되므로 입력하지 않음
-   * <p>사용 전 {@link ArticleDTO#isUpdateArticleValid()}를 통해 유효성 검사를 해야함
    *
    * @param articleDTO 게시글 DTO
    *                   <p>writer, title, content가 update set 대상

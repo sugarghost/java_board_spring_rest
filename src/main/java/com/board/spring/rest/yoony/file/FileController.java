@@ -2,7 +2,6 @@ package com.board.spring.rest.yoony.file;
 
 import com.board.spring.rest.yoony.article.ArticleService;
 import com.board.spring.rest.yoony.error.CustomException;
-import com.board.spring.rest.yoony.error.CustomExceptionView;
 import com.board.spring.rest.yoony.error.ErrorCode;
 import com.board.spring.rest.yoony.validation.article.ArticleIdValidation;
 import com.board.spring.rest.yoony.validation.file.FileIdValidation;
@@ -46,14 +45,15 @@ public class FileController {
   /**
    * 특정 게시물의 파일을 리스트를 조회하는 RequestMapping
    * <p> /v1/articles/{articleId}/files GET 요청을 처리함
+   *
    * @param articleId
    * @return ResponseEntity 성공시 HttpStatus.OK와 파일 리스트 반환
    * @throws CustomException
    * @throws Exception
-   * @see FileService#selectFileList(long)
-   * @see ArticleService#isArticleExist(long)
    * @author YK
    * @version 1.0
+   * @see FileService#selectFileList(long)
+   * @see ArticleService#isArticleExist(long)
    * @since 2023-03-04
    */
   @GetMapping
@@ -61,10 +61,10 @@ public class FileController {
       throws CustomException, Exception {
 
     if (articleId == 0) {
-      throw new CustomExceptionView(ErrorCode.ARTICLE_ID_NOT_VALID);
+      throw new CustomException(ErrorCode.ARTICLE_ID_NOT_VALID);
     }
     if (articleService.isArticleExist(articleId) == false) {
-      throw new CustomExceptionView(ErrorCode.ARTICLE_NOT_FOUND);
+      throw new CustomException(ErrorCode.ARTICLE_NOT_FOUND);
     }
 
     List<FileDTO> fileList = fileService.selectFileList(articleId);
@@ -76,21 +76,22 @@ public class FileController {
    * <p> /v1/articles/{articleId}/files/{fileId} GET 요청을 처리함
    * <p> 파일 다운로드시 Range 처리를 위해 요청 헤더를 받아서 처리함(사용은 안함)
    *
-   * @param fileId 파일 아이디
+   * @param fileId    파일 아이디
    * @param articleId 게시물 아이디
-   * @param headers 다운로드 처리를 위한 요청 헤더
+   * @param headers   다운로드 처리를 위한 요청 헤더
    * @return
    * @throws CustomException
    * @throws Exception
+   * @author YK
+   * @version 1.0
    * @see FileService#downloadFile(FileDTO, List)
    * @see ArticleService#isArticleExist(long)
    * @see FileService#selectFile(FileDTO)
-   * @author YK
-   * @version 1.0
    * @since 2023-03-04
    */
   @GetMapping("/{fileId}")
-  public ResponseEntity getFile(@FileIdValidation @PathVariable long fileId, @ArticleIdValidation @PathVariable long articleId,
+  public ResponseEntity getFile(@FileIdValidation @PathVariable long fileId,
+      @ArticleIdValidation @PathVariable long articleId,
       @RequestHeader HttpHeaders headers)
       throws CustomException, Exception {
     FileDTO fileDTO = new FileDTO();

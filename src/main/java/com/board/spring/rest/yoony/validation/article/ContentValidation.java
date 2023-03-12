@@ -8,6 +8,14 @@ import java.lang.annotation.Target;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 
+/**
+ * article content 검증
+ *
+ * @author yoony
+ * @since 2023. 03. 12.
+ * @version 1.0
+ * @see ContentValidator
+ */
 @Documented
 @Constraint(validatedBy = ContentValidator.class)
 @Target({ElementType.FIELD})

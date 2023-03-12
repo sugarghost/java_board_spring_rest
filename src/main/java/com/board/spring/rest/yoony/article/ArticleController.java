@@ -4,7 +4,7 @@ import static org.springframework.http.ResponseEntity.status;
 
 import com.board.spring.rest.yoony.article.search.SearchDTO;
 import com.board.spring.rest.yoony.error.CustomException;
-import com.board.spring.rest.yoony.error.CustomExceptionView;
+import com.board.spring.rest.yoony.error.CustomException;
 import com.board.spring.rest.yoony.error.ErrorCode;
 import com.board.spring.rest.yoony.util.Security;
 import com.board.spring.rest.yoony.validation.article.ArticleIdValidation;
@@ -52,7 +52,7 @@ public class ArticleController {
   /**
    * 게시글을 생성하는 RequestMapping /v1/articles POST 요청을 처리함 File 처리를 위해 @RequestPart를 사용함
    *
-   * @param articleDTOJson ArticleDTO를 json으로 변환한 String
+   * @param articleDTO ArticleDTO 형태의 게시글 정보
    * @param files          MultipartFile[] 형태의 파일 리스트
    * @return ResponseEntity 형태의 응답(성공시 HttpStatus.CREATED) 반환
    * @throws CustomException (유효성 검사 실패시 발생)
@@ -124,14 +124,13 @@ public class ArticleController {
   /**
    * 게시글을 수정하는 RequestMapping /v1/articles/{articleId} PUT 요청을 처리함 File 처리를 위해 @RequestPart를 사용함
    *
-   * @param articleDTOJson ArticleDTO를 json으로 변환한 String
+   * @param articleDTO ArticleDTO 형태의 게시글 정보
    * @param deleteFiles    삭제할 파일 리스트
    * @param files          MultipartFile[] 등록할 파일 리스트
    * @param articleId      게시글 번호
    * @return ResponseEntity 성공 시 HttpStatus.NO_CONTENT 반환
    * @throws CustomException
    * @throws Exception
-   * @see ArticleService#isArticleExist(long)
    * @see ArticleService#isPasswordCorrect(ArticleDTO)
    * @see ArticleService#updateArticleAndFiles(ArticleDTO, String[], MultipartFile[])
    */
@@ -145,7 +144,7 @@ public class ArticleController {
     articleDTO.setPassword(Security.sha256Encrypt(articleDTO.getPassword()));
 
     if (articleService.isPasswordCorrect(articleDTO) == false) {
-      throw new CustomExceptionView(ErrorCode.ARTICLE_PASSWORD_NOT_VALID);
+      throw new CustomException(ErrorCode.ARTICLE_PASSWORD_NOT_VALID);
     }
 
     int result = articleService.updateArticleAndFiles(articleDTO, deleteFiles, files);
@@ -173,7 +172,7 @@ public class ArticleController {
     articleDTO.setPassword(Security.sha256Encrypt(articleDTO.getPassword()));
 
     if (articleService.isPasswordCorrect(articleDTO) == false) {
-      throw new CustomExceptionView(ErrorCode.ARTICLE_PASSWORD_NOT_VALID);
+      throw new CustomException(ErrorCode.ARTICLE_PASSWORD_NOT_VALID);
     }
 
     int deleteResult = articleService.deleteArticle(articleDTO);

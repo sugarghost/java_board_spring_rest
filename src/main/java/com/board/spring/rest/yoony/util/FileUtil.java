@@ -60,15 +60,17 @@ public class FileUtil {
    * 파일 다운로드를 위한 메소드
    * <p> 파일 다운로드를 진행하고, 다운로드된 파일의 정보를 ResponseEntity 형태로 반환
    *
-   * @param fileDTO     다운로드할 파일 정보를 담은 DTO
-   * @param rangeHeader 다운로드 범위
+   * @param fileSavePath 파일 저장 경로
+   * @param fileSaveName 파일 저장 이름
+   * @param rangeHeader  다운로드 범위
    * @return ResponseEntity 형태의 파일 정보
    * @throws Exception (파일 다운로드 실패시 발생)
    * @author YK
    * @version 1.0
    * @since 2023-03-04
    */
-  public static ResponseEntity downloadFile(String fileSavePath, String fileSaveName, List<String> rangeHeader) throws Exception {
+  public static ResponseEntity downloadFile(String fileSavePath, String fileSaveName,
+      List<String> rangeHeader) throws Exception {
     Path filePath = Paths.get(fileSavePath).resolve(fileSaveName).normalize();
     Resource resource = new FileSystemResource(filePath.toFile());
 

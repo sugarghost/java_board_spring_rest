@@ -2,7 +2,7 @@ package com.board.spring.rest.yoony.comment;
 
 import com.board.spring.rest.yoony.article.ArticleService;
 import com.board.spring.rest.yoony.error.CustomException;
-import com.board.spring.rest.yoony.error.CustomExceptionView;
+import com.board.spring.rest.yoony.error.CustomException;
 import com.board.spring.rest.yoony.error.ErrorCode;
 import com.board.spring.rest.yoony.validation.article.ArticleIdValidation;
 import java.util.List;
@@ -58,7 +58,7 @@ public class CommentController {
       throws CustomException, Exception {
 
     if (errors.hasErrors()) {
-      throw new CustomExceptionView(ErrorCode.COMMENT_CONTENT_NOT_VALID);
+      throw new CustomException(ErrorCode.COMMENT_CONTENT_NOT_VALID);
     }
     commentDTO.setArticleId(articleId);
 
@@ -83,10 +83,10 @@ public class CommentController {
       throws CustomException, Exception {
 
     if (articleId == 0) {
-      throw new CustomExceptionView(ErrorCode.ARTICLE_ID_NOT_VALID);
+      throw new CustomException(ErrorCode.ARTICLE_ID_NOT_VALID);
     }
     if (articleService.isArticleExist(articleId) == false) {
-      throw new CustomExceptionView(ErrorCode.ARTICLE_NOT_FOUND);
+      throw new CustomException(ErrorCode.ARTICLE_NOT_FOUND);
     }
     List<CommentDTO> commentList = commentService.selectCommentList(articleId);
     return ResponseEntity.ok(commentList);

@@ -8,6 +8,14 @@ import java.lang.annotation.Target;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 
+/**
+ * ArticleIdValidation
+ *
+ * @author yoony
+ * @since 2023. 03. 12.
+ * @version 1.0
+ * @see ArticleIdValidator
+ */
 @Documented
 @Constraint(validatedBy = ArticleIdValidator.class)
 @Target({ElementType.FIELD, ElementType.PARAMETER})
