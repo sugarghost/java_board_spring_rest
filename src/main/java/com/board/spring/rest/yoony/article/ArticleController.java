@@ -59,6 +59,9 @@ public class ArticleController {
    * @throws Exception
    * @see ArticleService#insertArticleAndFiles(ArticleDTO, MultipartFile[])
    */
+  // TODO: 아토믹한 발리데이터는 되었지만, 그룹 발리데이션을 하기 위해서는 선언적으로 가는 것이 좋음
+  // Validator란 어노테이션이 하나 있고, 값으로 어떤 그룹을 사용할 것인지를 정의하면 됨
+  // {} 객체 형태로 fileds, rule등의 요소를 전달하는 방식으로 구현
   @PostMapping
   public ResponseEntity createArticle(
       @Validated(ArticleValidationGroups.InsertArticleGroup.class) @RequestPart("articleDTO") ArticleDTO articleDTO,
@@ -93,6 +96,14 @@ public class ArticleController {
       return status(HttpStatus.NO_CONTENT).body(null);
     }
     HttpHeaders headers = new HttpHeaders();
+    // TODO: 헤더는 항상 특정 데이터(멀티파트 제외), 인증, 시크릿 등의 정보 즉 늘 요청에서 가지고 가야할 데이터가 들어가는 용도
+    // 메타성 데이터가 들어가기 위한 용도
+    // 요청에 대한 응답 데이터는 바디로 통치기
+    /*
+    APIResult apiResult = new APIResult();
+    apiResult.set("list", list);
+    apiResult.set("total", toa);
+     */
     headers.set("X-Total-Count", String.valueOf(totalCount));
     return new ResponseEntity(articleList, headers, HttpStatus.OK);
   }

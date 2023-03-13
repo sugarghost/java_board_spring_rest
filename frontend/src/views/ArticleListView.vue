@@ -136,7 +136,7 @@ const searchArticles = () => {
   store.commit("updateSearchParams", searchParams.value);
   getArticles(searchParams.value);
 };
-
+// TODO: watch가 프로젝트 관리에 있어서 복잡성을 증가시킴, 가능하면 명시적으로 update해주는 방법을 고려
 watch(
   () => currentPage.value,
   (newValue) => {

@@ -2,10 +2,10 @@ import { ref, Ref } from "vue";
 
 import axios from "../axios/axios";
 import type { IArticle, ISearchParams } from "../types/article";
-
+// TODO: class로 뺴고 Api 프로바이더로 빼기
 export function getArticlesApi() {
   const articles: Ref<IArticle[]> = ref([]);
-
+  // isLoding으로 충분함 또한 일반적으로 Loading을 따로 두지는 않음
   const articlesAreLoading = ref(false);
 
   const totalArticleCount = ref(0);
