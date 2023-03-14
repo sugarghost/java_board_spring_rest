@@ -23,7 +23,11 @@
     + [Vue에 라이프 사이클 이해하기](#Vue에-라이프-사이클-이해하기)
     + [라이브러리는 그냥 라이브러리다.](#라이브러리는-그냥-라이브러리다)
     + [Vue에 중복 처리를 공통 모듈로 만들기](#Vue에-중복-처리를-공통-모듈로-만들기)
-
+* [2023-03-12 신규 피드백](#2023-03-12-신규-피드백)
+  + [Validator의 그룹화](#validator의-그룹화)
+  + [반환을 위해 Header 사용하지 말기](#반환을-위해-header-사용하지-말기)
+  + [Watch 사용 자제하기](#watch-사용-자제하기)
+  + [Class 활용](#class-활용)
 ## 이전 Java_board_Spring 피드백
 
 ### 추가 리팩토링
@@ -252,4 +256,50 @@ Axios 요청에 대한 공통 처리를 위해 인터럽트를 사용하는데,
 이러한 Axios를 공통 모듈로 만들어 사용하는 것이 좋습니다.  
 유효성 검증과 같은 경우도 공통 모듈로 만들어 사용하는 것이 좋습니다.  
 
+## 2023-03-12 신규 피드백
+### Validator의 그룹화
+현재 아토믹한 Validator를 만들어서 사용하고 있습니다.  
+필드를 기준으로 Validator 파일이 따로 만들어지고, Interface를 통해 Validator를 그룹화하고 있습니다.  
+상세한 분류는 좋지만, 파일이 늘어나면서 분리에 따른 복잡성이 증가하고 있습니다.
+그룹 Validator에 대해서는 선언적으로 가는 것을 추천합니다.  
+Validator란 어노테이션을 하나 만들고, 값으로 어떤 그룹, 필드를 검증할 것인지 정의하는 방식입니다.  
+예시로 {} 객체 형태로 fileds, rule등의 요소를 리스트로 전달하는 방식으로 구현합니다.  
+
+### 반환을 위해 Header 사용하지 말기
+현재 Aritcle List를 가져오는 과정에 Article Count를 Header로 넘겨주고 있습니다.  
+예시:  
+```java
+  @GetMapping
+public ResponseEntity getArticleList(@ModelAttribute SearchDTO searchDTO)
+        throws CustomException, Exception {
+
+  int totalCount = articleService.selectArticleCount(searchDTO);
+  List<ArticleDTO> articleList = articleService.selectArticleList(searchDTO);
+  if (articleList == null) {
+  return status(HttpStatus.NO_CONTENT).body(null);
+  }
+  HttpHeaders headers = new HttpHeaders();
+  headers.set("X-Total-Count", String.valueOf(totalCount));
+  return new ResponseEntity(articleList, headers, HttpStatus.OK);
+}
+```
+X-Total-Count라는 헤더를 통해 Article Count를 넘겨주고 있습니다.  
+Header는 요청에 늘 포함회더 가지고 가야할(인증 등...) 데이터가 들어가는 용도로 특정 요청에 대한 데이터를 넘겨주는 용도로는 좋지 않습니다.  
+이러한 경우에는 Body에 넣어서 반환하는 것이 좋습니다.  
+반환용 타입을 따로 만들어서 넘겨주는 방식을 추천합니다.  
+```java
+    // APIResult 라는 반환 타입을 따로 만들었고 이를 통해 반환합니다. 
+    APIResult apiResult = new APIResult();
+    apiResult.set("list", list);
+    apiResult.set("total", toa);
+```
+### Watch 사용 자제하기
+Vue에서 특정 데이터를 감시하며 변화시 함수 호출을 위해 Watch를 사용하는 경우가 많습니다.  
+Watch는 프로젝트 관리에 있어서 복잡성을 증가시킵니다. 
+특정 데이터 변화에 대한 Update 처리시 
+가급적 명시적으로 Update 해주는 방법을 고려 하시길 바랍니다.  
+
+### Class 활용
+Api 호출 부분을 getArticlesApi 등의 이름으로 모듈화 했지만, function 선언자를 활용했습니다.  
+이러한 경우에는 Class로 선언하고 프로바이더로 등록하는 방식을 추천합니다.
 
